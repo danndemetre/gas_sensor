@@ -22,9 +22,8 @@ struct lm60_config {
 typedef struct lm60_config lm60_cfg_t;
 
 /**
- * @brief creates a new i2c_conf and configuration for the lm60 temperature sensor
- * @param lm60_params
- * @return
+ * @brief initializes the lm60 temperature sensor
+ * @return a configuration for the lm60 and its ADS1115
  */
 lm60_cfg_t  lm60_init();
 
