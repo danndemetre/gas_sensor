@@ -7,12 +7,47 @@
 #include "hw_config.h"
 #include "stm32f1xx_hal.h"
 
+lm60_cfg_t hw_conf_lm60(){
+	ads1115_i2c_conf_t ads1115_i2c_conf = (ads1115_i2c_conf_t){
+			.hi2c = hw_conf_lm60_ads1115().ads1115_hi2c,
+			.i2c_slave_addr =hw_conf_lm60_ads1115().ads1115_i2c_slave_addr,
+			.timeout = hw_conf_lm60_ads1115().ads1115_timeout,
+	};
+	ads1115_config_t ads1115_reg_config = 	 (ads1115_config_t){
+			.os = ADS1115_OS,
+			.pin = hw_conf_lm60_ads1115().ads1115_pin,
+			.gain = ADS1115_1_024V,
+			.mode = ADS1115_SINGLE_SHOT,
+			.data_rate = ADS1115_DEF_SPS,
+			.comp = ADS1115_DEF_COMP,
+			.polarity = ADS1115_DEF_POL,
+			.latch = ADS1115_DEF_LATCH,
+			.queue = ADS1115_COMP_DISABLE,
+	};
+
+	return (lm60_cfg_t){
+		.ads_i2c_conf = &ads1115_i2c_conf,
+		.ads_reg_conf = &ads1115_reg_config,
+	};
+}
+
+hw_i2c_eeprom_cfg_t hw_conf_m24c64_w(){
+	return (hw_i2c_eeprom_cfg_t){
+		.hi2c = &hi2c2,
+		.i2c_slave_addr = 0xA0,
+		.timeout = 100, //ms
+		.page_size = 32, //Bytes
+		.pages = 256,
+	};
+}
+
 struct  hw_conf_lm60 hw_conf_lm60_ads1115(){
 	return (struct hw_conf_lm60){
 		.ads1115_hi2c = &hi2c2,
 		.ads1115_i2c_slave_addr = ADS1115BUS_ADDRESS_GND,
 		.ads1115_pin = ADS1115_AIN1_COMP_GND };
 }
+
 
 void MX_USART1_UART_Init(void)
 {
@@ -60,7 +95,6 @@ void Error_Handler(void)
 
 void MX_GPIO_Init(void)
 {
-
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();

@@ -9,7 +9,18 @@
 #define INC_COMPONENTS_LM60_H_
 
 #include "components/ads1115.h"
-#include "hw_config.h"
+
+/*
+ * @brief the hw_configuration struct for the lm60
+ */
+struct hw_conf_lm60 {
+	I2C_HandleTypeDef * ads1115_hi2c; /*STM32 I2C number of the ADS1115 that the LM60 is connected to*/
+	uint8_t ads1115_i2c_slave_addr; /*ADS1115 address of the ADS1115 that the LM60 is connected to*/
+	uint32_t ads1115_timeout; /*Associated ADS1115 timeout for LM60 operations*/
+	enum ads1115_pin ads1115_pin; /*Input channel for the LM60 to the ADS1115 */
+};
+
+typedef struct hw_conf_lm60 hw_conf_lm60_t;
 
 /**
  * @brief lm60 i2c_conf consisting of ads i2c_conf and config
@@ -20,12 +31,6 @@ struct lm60_config {
 };
 
 typedef struct lm60_config lm60_cfg_t;
-
-/**
- * @brief initializes the lm60 temperature sensor
- * @return a configuration for the lm60 and its ADS1115
- */
-lm60_cfg_t  lm60_init();
 
 /**
  * @brief  Gets the temperature of the LM60 attached to the ADS1115

@@ -1,3 +1,4 @@
+"./Core/Src/components/EEPROM.o"
 "./Core/Src/components/ads1115.o"
 "./Core/Src/components/lm60.o"
 "./Core/Src/hw_config.o"

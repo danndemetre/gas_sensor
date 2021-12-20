@@ -24,7 +24,6 @@
   */
 int main(void)
 {
-
   HAL_Init();
   SystemClock_Config();
   MX_GPIO_Init();
@@ -32,8 +31,10 @@ int main(void)
   MX_I2C2_Init();
 
  float temp_c = 0;
- lm60_cfg_t  lm60 = lm60_init();
-  while (1)
+ lm60_cfg_t  lm60 = hw_conf_lm60();
+ //hw_i2c_eeprom_cfg_t m24c64_eeprom = hw_conf_m24c64_w();
+
+while (1)
   {
 	  lm60_get_temp(&lm60, &temp_c);
 	  HAL_Delay(1000);

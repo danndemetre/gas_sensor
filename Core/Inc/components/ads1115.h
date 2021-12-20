@@ -22,7 +22,7 @@ typedef uint16_t ads1115_raw_conf_t;
 /**
  * @brief The ADS1115  parameters
  */
-struct ads1115_params {
+struct ads1115_i2c_params {
 	I2C_HandleTypeDef * hi2c; /**< The I2C bus number on which the ADS lies */
     uint8_t i2c_slave_addr; /**< The slave address configured in hardware */
     uint32_t timeout; /**< The maximum amount of milliseconds to wait for
@@ -32,7 +32,7 @@ struct ads1115_params {
 /**
  * @brief A handle to an ADC i2c_conf
  */
-typedef struct ads1115_params ads1115_i2c_conf_t;
+typedef struct ads1115_i2c_params ads1115_i2c_conf_t;
 
 /**
  * @brief The various bit offsets for the different parameters
@@ -178,18 +178,6 @@ struct ads1115_config {
  * @brief A parsed read configuration
  */
 typedef  struct ads1115_config ads1115_config_t;
-
-/**
- * @brief Begin a new ADC i2c_conf
- *
- * Before you can read from the ADS you must begin a new i2c_conf to gain access
- * to the I2C bus.
- *
- * @param params The parameters for your i2c_conf
- *
- * @return A valid i2c_conf on success, NULL on failure
- */
-ads1115_i2c_conf_t* ads1115_begin(struct ads1115_params* params);
 
 /**
  * @brief encodes the configuration to a raw result for the ADC config reg.

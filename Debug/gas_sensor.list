@@ -27,23 +27,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 00000029  00000000  00000000  00020010  2**0
                   CONTENTS, READONLY
- 12 .debug_info   0000b5d3  00000000  00000000  00020039  2**0
+ 12 .debug_info   0000b664  00000000  00000000  00020039  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 00001a92  00000000  00000000  0002b60c  2**0
+ 13 .debug_abbrev 00001a81  00000000  00000000  0002b69d  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_aranges 00000960  00000000  00000000  0002d0a0  2**3
+ 14 .debug_aranges 00000968  00000000  00000000  0002d120  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_ranges 000008e0  00000000  00000000  0002da00  2**3
+ 15 .debug_ranges 000008e8  00000000  00000000  0002da88  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  00017026  00000000  00000000  0002e2e0  2**0
+ 16 .debug_macro  00001850  00000000  00000000  0002e370  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   0000b153  00000000  00000000  00045306  2**0
+ 17 .debug_line   0000b17e  00000000  00000000  0002fbc0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    0008410a  00000000  00000000  00050459  2**0
+ 18 .debug_str    00084154  00000000  00000000  0003ad3e  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000053  00000000  00000000  000d4563  2**0
+ 19 .comment      00000053  00000000  00000000  000bee92  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  0000271c  00000000  00000000  000d45b8  2**2
+ 20 .debug_frame  00002744  00000000  00000000  000beee8  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -1406,157 +1406,161 @@ HAL_StatusTypeDef ads1115_read_to_millivolts(ads1115_i2c_conf_t* i2c_conf,
  8000e50:	3718      	adds	r7, #24
  8000e52:	46bd      	mov	sp, r7
  8000e54:	bd80      	pop	{r7, pc}
+	...
 
-08000e56 <lm60_init>:
+08000e58 <lm60_get_temp>:
  */
 #include "components/lm60.h"
 #include "components/ads1115.h"
 #include "stdlib.h"
 
-lm60_cfg_t lm60_init(){
- 8000e56:	b580      	push	{r7, lr}
- 8000e58:	b0a0      	sub	sp, #128	; 0x80
- 8000e5a:	af00      	add	r7, sp, #0
- 8000e5c:	6078      	str	r0, [r7, #4]
+HAL_StatusTypeDef lm60_get_temp(lm60_cfg_t* lm60_conf, float * temp_c){
+ 8000e58:	b580      	push	{r7, lr}
+ 8000e5a:	b084      	sub	sp, #16
+ 8000e5c:	af00      	add	r7, sp, #0
+ 8000e5e:	6078      	str	r0, [r7, #4]
+ 8000e60:	6039      	str	r1, [r7, #0]
+	HAL_StatusTypeDef err = ads1115_write_cfg(lm60_conf->ads_i2c_conf,  lm60_conf->ads_reg_conf);
+ 8000e62:	687b      	ldr	r3, [r7, #4]
+ 8000e64:	681a      	ldr	r2, [r3, #0]
+ 8000e66:	687b      	ldr	r3, [r7, #4]
+ 8000e68:	685b      	ldr	r3, [r3, #4]
+ 8000e6a:	4619      	mov	r1, r3
+ 8000e6c:	4610      	mov	r0, r2
+ 8000e6e:	f7ff feb9 	bl	8000be4 <ads1115_write_cfg>
+ 8000e72:	4603      	mov	r3, r0
+ 8000e74:	73fb      	strb	r3, [r7, #15]
+	int16_t mv;
+	if (err == HAL_OK){
+ 8000e76:	7bfb      	ldrb	r3, [r7, #15]
+ 8000e78:	2b00      	cmp	r3, #0
+ 8000e7a:	d122      	bne.n	8000ec2 <lm60_get_temp+0x6a>
+		err = ads1115_read_adc_millivolts(lm60_conf->ads_i2c_conf, lm60_conf->ads_reg_conf, &mv);
+ 8000e7c:	687b      	ldr	r3, [r7, #4]
+ 8000e7e:	6818      	ldr	r0, [r3, #0]
+ 8000e80:	687b      	ldr	r3, [r7, #4]
+ 8000e82:	685b      	ldr	r3, [r3, #4]
+ 8000e84:	f107 020c 	add.w	r2, r7, #12
+ 8000e88:	4619      	mov	r1, r3
+ 8000e8a:	f7ff ff7f 	bl	8000d8c <ads1115_read_adc_millivolts>
+ 8000e8e:	4603      	mov	r3, r0
+ 8000e90:	73fb      	strb	r3, [r7, #15]
+		if( err == HAL_OK){
+ 8000e92:	7bfb      	ldrb	r3, [r7, #15]
+ 8000e94:	2b00      	cmp	r3, #0
+ 8000e96:	d114      	bne.n	8000ec2 <lm60_get_temp+0x6a>
+			* temp_c = (mv - 424) / 6.25;
+ 8000e98:	f9b7 300c 	ldrsh.w	r3, [r7, #12]
+ 8000e9c:	f5a3 73d4 	sub.w	r3, r3, #424	; 0x1a8
+ 8000ea0:	4618      	mov	r0, r3
+ 8000ea2:	f7ff faa5 	bl	80003f0 <__aeabi_i2d>
+ 8000ea6:	f04f 0200 	mov.w	r2, #0
+ 8000eaa:	4b08      	ldr	r3, [pc, #32]	; (8000ecc <lm60_get_temp+0x74>)
+ 8000eac:	f7ff fc34 	bl	8000718 <__aeabi_ddiv>
+ 8000eb0:	4602      	mov	r2, r0
+ 8000eb2:	460b      	mov	r3, r1
+ 8000eb4:	4610      	mov	r0, r2
+ 8000eb6:	4619      	mov	r1, r3
+ 8000eb8:	f7ff fd36 	bl	8000928 <__aeabi_d2f>
+ 8000ebc:	4602      	mov	r2, r0
+ 8000ebe:	683b      	ldr	r3, [r7, #0]
+ 8000ec0:	601a      	str	r2, [r3, #0]
+		}
+	}
+	return err;
+ 8000ec2:	7bfb      	ldrb	r3, [r7, #15]
+}
+ 8000ec4:	4618      	mov	r0, r3
+ 8000ec6:	3710      	adds	r7, #16
+ 8000ec8:	46bd      	mov	sp, r7
+ 8000eca:	bd80      	pop	{r7, pc}
+ 8000ecc:	40190000 	.word	0x40190000
+
+08000ed0 <hw_conf_lm60>:
+ *      Author: dann
+ */
+#include "hw_config.h"
+#include "stm32f1xx_hal.h"
+
+lm60_cfg_t hw_conf_lm60(){
+ 8000ed0:	b580      	push	{r7, lr}
+ 8000ed2:	b0a0      	sub	sp, #128	; 0x80
+ 8000ed4:	af00      	add	r7, sp, #0
+ 8000ed6:	6078      	str	r0, [r7, #4]
 	ads1115_i2c_conf_t ads1115_i2c_conf = (ads1115_i2c_conf_t){
 			.hi2c = hw_conf_lm60_ads1115().ads1115_hi2c,
- 8000e5e:	f107 0340 	add.w	r3, r7, #64	; 0x40
- 8000e62:	4618      	mov	r0, r3
- 8000e64:	f000 f878 	bl	8000f58 <hw_conf_lm60_ads1115>
- 8000e68:	6c3b      	ldr	r3, [r7, #64]	; 0x40
+ 8000ed8:	f107 0340 	add.w	r3, r7, #64	; 0x40
+ 8000edc:	4618      	mov	r0, r3
+ 8000ede:	f000 f83b 	bl	8000f58 <hw_conf_lm60_ads1115>
+ 8000ee2:	6c3b      	ldr	r3, [r7, #64]	; 0x40
 	ads1115_i2c_conf_t ads1115_i2c_conf = (ads1115_i2c_conf_t){
- 8000e6a:	637b      	str	r3, [r7, #52]	; 0x34
+ 8000ee4:	637b      	str	r3, [r7, #52]	; 0x34
 			.i2c_slave_addr =hw_conf_lm60_ads1115().ads1115_i2c_slave_addr,
- 8000e6c:	f107 0350 	add.w	r3, r7, #80	; 0x50
- 8000e70:	4618      	mov	r0, r3
- 8000e72:	f000 f871 	bl	8000f58 <hw_conf_lm60_ads1115>
- 8000e76:	f897 3054 	ldrb.w	r3, [r7, #84]	; 0x54
+ 8000ee6:	f107 0350 	add.w	r3, r7, #80	; 0x50
+ 8000eea:	4618      	mov	r0, r3
+ 8000eec:	f000 f834 	bl	8000f58 <hw_conf_lm60_ads1115>
+ 8000ef0:	f897 3054 	ldrb.w	r3, [r7, #84]	; 0x54
 	ads1115_i2c_conf_t ads1115_i2c_conf = (ads1115_i2c_conf_t){
- 8000e7a:	f887 3038 	strb.w	r3, [r7, #56]	; 0x38
+ 8000ef4:	f887 3038 	strb.w	r3, [r7, #56]	; 0x38
 			.timeout = hw_conf_lm60_ads1115().ads1115_timeout,
- 8000e7e:	f107 0360 	add.w	r3, r7, #96	; 0x60
- 8000e82:	4618      	mov	r0, r3
- 8000e84:	f000 f868 	bl	8000f58 <hw_conf_lm60_ads1115>
- 8000e88:	6ebb      	ldr	r3, [r7, #104]	; 0x68
+ 8000ef8:	f107 0360 	add.w	r3, r7, #96	; 0x60
+ 8000efc:	4618      	mov	r0, r3
+ 8000efe:	f000 f82b 	bl	8000f58 <hw_conf_lm60_ads1115>
+ 8000f02:	6ebb      	ldr	r3, [r7, #104]	; 0x68
 	ads1115_i2c_conf_t ads1115_i2c_conf = (ads1115_i2c_conf_t){
- 8000e8a:	63fb      	str	r3, [r7, #60]	; 0x3c
+ 8000f04:	63fb      	str	r3, [r7, #60]	; 0x3c
 	};
 	ads1115_config_t ads1115_reg_config = 	 (ads1115_config_t){
- 8000e8c:	2300      	movs	r3, #0
- 8000e8e:	773b      	strb	r3, [r7, #28]
+ 8000f06:	2300      	movs	r3, #0
+ 8000f08:	773b      	strb	r3, [r7, #28]
 			.os = ADS1115_OS,
 			.pin = hw_conf_lm60_ads1115().ads1115_pin,
- 8000e90:	f107 0370 	add.w	r3, r7, #112	; 0x70
- 8000e94:	4618      	mov	r0, r3
- 8000e96:	f000 f85f 	bl	8000f58 <hw_conf_lm60_ads1115>
- 8000e9a:	f897 307c 	ldrb.w	r3, [r7, #124]	; 0x7c
+ 8000f0a:	f107 0370 	add.w	r3, r7, #112	; 0x70
+ 8000f0e:	4618      	mov	r0, r3
+ 8000f10:	f000 f822 	bl	8000f58 <hw_conf_lm60_ads1115>
+ 8000f14:	f897 307c 	ldrb.w	r3, [r7, #124]	; 0x7c
 	ads1115_config_t ads1115_reg_config = 	 (ads1115_config_t){
- 8000e9e:	777b      	strb	r3, [r7, #29]
- 8000ea0:	2303      	movs	r3, #3
- 8000ea2:	77bb      	strb	r3, [r7, #30]
- 8000ea4:	2301      	movs	r3, #1
- 8000ea6:	77fb      	strb	r3, [r7, #31]
- 8000ea8:	2304      	movs	r3, #4
- 8000eaa:	f887 3020 	strb.w	r3, [r7, #32]
- 8000eae:	2300      	movs	r3, #0
- 8000eb0:	f887 3021 	strb.w	r3, [r7, #33]	; 0x21
- 8000eb4:	2300      	movs	r3, #0
- 8000eb6:	f887 3022 	strb.w	r3, [r7, #34]	; 0x22
- 8000eba:	2300      	movs	r3, #0
- 8000ebc:	f887 3023 	strb.w	r3, [r7, #35]	; 0x23
- 8000ec0:	2303      	movs	r3, #3
- 8000ec2:	f887 3024 	strb.w	r3, [r7, #36]	; 0x24
+ 8000f18:	777b      	strb	r3, [r7, #29]
+ 8000f1a:	2303      	movs	r3, #3
+ 8000f1c:	77bb      	strb	r3, [r7, #30]
+ 8000f1e:	2301      	movs	r3, #1
+ 8000f20:	77fb      	strb	r3, [r7, #31]
+ 8000f22:	2304      	movs	r3, #4
+ 8000f24:	f887 3020 	strb.w	r3, [r7, #32]
+ 8000f28:	2300      	movs	r3, #0
+ 8000f2a:	f887 3021 	strb.w	r3, [r7, #33]	; 0x21
+ 8000f2e:	2300      	movs	r3, #0
+ 8000f30:	f887 3022 	strb.w	r3, [r7, #34]	; 0x22
+ 8000f34:	2300      	movs	r3, #0
+ 8000f36:	f887 3023 	strb.w	r3, [r7, #35]	; 0x23
+ 8000f3a:	2303      	movs	r3, #3
+ 8000f3c:	f887 3024 	strb.w	r3, [r7, #36]	; 0x24
 			.polarity = ADS1115_DEF_POL,
 			.latch = ADS1115_DEF_LATCH,
 			.queue = ADS1115_COMP_DISABLE,
 	};
 
 	return (lm60_cfg_t){
- 8000ec6:	687b      	ldr	r3, [r7, #4]
- 8000ec8:	f107 0234 	add.w	r2, r7, #52	; 0x34
- 8000ecc:	601a      	str	r2, [r3, #0]
- 8000ece:	687b      	ldr	r3, [r7, #4]
- 8000ed0:	f107 021c 	add.w	r2, r7, #28
- 8000ed4:	605a      	str	r2, [r3, #4]
+ 8000f40:	687b      	ldr	r3, [r7, #4]
+ 8000f42:	f107 0234 	add.w	r2, r7, #52	; 0x34
+ 8000f46:	601a      	str	r2, [r3, #0]
+ 8000f48:	687b      	ldr	r3, [r7, #4]
+ 8000f4a:	f107 021c 	add.w	r2, r7, #28
+ 8000f4e:	605a      	str	r2, [r3, #4]
 		.ads_i2c_conf = &ads1115_i2c_conf,
 		.ads_reg_conf = &ads1115_reg_config,
 	};
 }
- 8000ed6:	6878      	ldr	r0, [r7, #4]
- 8000ed8:	3780      	adds	r7, #128	; 0x80
- 8000eda:	46bd      	mov	sp, r7
- 8000edc:	bd80      	pop	{r7, pc}
-	...
-
-08000ee0 <lm60_get_temp>:
-
-HAL_StatusTypeDef lm60_get_temp(lm60_cfg_t* lm60_conf, float * temp_c){
- 8000ee0:	b580      	push	{r7, lr}
- 8000ee2:	b084      	sub	sp, #16
- 8000ee4:	af00      	add	r7, sp, #0
- 8000ee6:	6078      	str	r0, [r7, #4]
- 8000ee8:	6039      	str	r1, [r7, #0]
-	HAL_StatusTypeDef err = ads1115_write_cfg(lm60_conf->ads_i2c_conf,  lm60_conf->ads_reg_conf);
- 8000eea:	687b      	ldr	r3, [r7, #4]
- 8000eec:	681a      	ldr	r2, [r3, #0]
- 8000eee:	687b      	ldr	r3, [r7, #4]
- 8000ef0:	685b      	ldr	r3, [r3, #4]
- 8000ef2:	4619      	mov	r1, r3
- 8000ef4:	4610      	mov	r0, r2
- 8000ef6:	f7ff fe75 	bl	8000be4 <ads1115_write_cfg>
- 8000efa:	4603      	mov	r3, r0
- 8000efc:	73fb      	strb	r3, [r7, #15]
-	int16_t mv;
-	if (err == HAL_OK){
- 8000efe:	7bfb      	ldrb	r3, [r7, #15]
- 8000f00:	2b00      	cmp	r3, #0
- 8000f02:	d122      	bne.n	8000f4a <lm60_get_temp+0x6a>
-		err = ads1115_read_adc_millivolts(lm60_conf->ads_i2c_conf, lm60_conf->ads_reg_conf, &mv);
- 8000f04:	687b      	ldr	r3, [r7, #4]
- 8000f06:	6818      	ldr	r0, [r3, #0]
- 8000f08:	687b      	ldr	r3, [r7, #4]
- 8000f0a:	685b      	ldr	r3, [r3, #4]
- 8000f0c:	f107 020c 	add.w	r2, r7, #12
- 8000f10:	4619      	mov	r1, r3
- 8000f12:	f7ff ff3b 	bl	8000d8c <ads1115_read_adc_millivolts>
- 8000f16:	4603      	mov	r3, r0
- 8000f18:	73fb      	strb	r3, [r7, #15]
-		if( err == HAL_OK){
- 8000f1a:	7bfb      	ldrb	r3, [r7, #15]
- 8000f1c:	2b00      	cmp	r3, #0
- 8000f1e:	d114      	bne.n	8000f4a <lm60_get_temp+0x6a>
-			* temp_c = (mv - 424) / 6.25;
- 8000f20:	f9b7 300c 	ldrsh.w	r3, [r7, #12]
- 8000f24:	f5a3 73d4 	sub.w	r3, r3, #424	; 0x1a8
- 8000f28:	4618      	mov	r0, r3
- 8000f2a:	f7ff fa61 	bl	80003f0 <__aeabi_i2d>
- 8000f2e:	f04f 0200 	mov.w	r2, #0
- 8000f32:	4b08      	ldr	r3, [pc, #32]	; (8000f54 <lm60_get_temp+0x74>)
- 8000f34:	f7ff fbf0 	bl	8000718 <__aeabi_ddiv>
- 8000f38:	4602      	mov	r2, r0
- 8000f3a:	460b      	mov	r3, r1
- 8000f3c:	4610      	mov	r0, r2
- 8000f3e:	4619      	mov	r1, r3
- 8000f40:	f7ff fcf2 	bl	8000928 <__aeabi_d2f>
- 8000f44:	4602      	mov	r2, r0
- 8000f46:	683b      	ldr	r3, [r7, #0]
- 8000f48:	601a      	str	r2, [r3, #0]
-		}
-	}
-	return err;
- 8000f4a:	7bfb      	ldrb	r3, [r7, #15]
-}
- 8000f4c:	4618      	mov	r0, r3
- 8000f4e:	3710      	adds	r7, #16
- 8000f50:	46bd      	mov	sp, r7
- 8000f52:	bd80      	pop	{r7, pc}
- 8000f54:	40190000 	.word	0x40190000
+ 8000f50:	6878      	ldr	r0, [r7, #4]
+ 8000f52:	3780      	adds	r7, #128	; 0x80
+ 8000f54:	46bd      	mov	sp, r7
+ 8000f56:	bd80      	pop	{r7, pc}
 
 08000f58 <hw_conf_lm60_ads1115>:
- *      Author: dann
- */
-#include "hw_config.h"
-#include "stm32f1xx_hal.h"
+		.page_size = 32, //Bytes
+		.pages = 256,
+	};
+}
 
 struct  hw_conf_lm60 hw_conf_lm60_ads1115(){
  8000f58:	b480      	push	{r7}
@@ -1593,6 +1597,7 @@ struct  hw_conf_lm60 hw_conf_lm60_ads1115(){
  8000f8c:	20000030 	.word	0x20000030
 
 08000f90 <MX_USART1_UART_Init>:
+
 
 void MX_USART1_UART_Init(void)
 {
@@ -1738,7 +1743,6 @@ void MX_GPIO_Init(void)
  800104c:	b480      	push	{r7}
  800104e:	b085      	sub	sp, #20
  8001050:	af00      	add	r7, sp, #0
-
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOD_CLK_ENABLE();
  8001052:	4b14      	ldr	r3, [pc, #80]	; (80010a4 <MX_GPIO_Init+0x58>)
@@ -1889,7 +1893,6 @@ int main(void)
  8001136:	b580      	push	{r7, lr}
  8001138:	b084      	sub	sp, #16
  800113a:	af00      	add	r7, sp, #0
-
   HAL_Init();
  800113c:	f000 f930 	bl	80013a0 <HAL_Init>
   SystemClock_Config();
@@ -1904,18 +1907,20 @@ int main(void)
  float temp_c = 0;
  8001150:	f04f 0300 	mov.w	r3, #0
  8001154:	60fb      	str	r3, [r7, #12]
- lm60_cfg_t  lm60 = lm60_init();
+ lm60_cfg_t  lm60 = hw_conf_lm60();
  8001156:	1d3b      	adds	r3, r7, #4
  8001158:	4618      	mov	r0, r3
- 800115a:	f7ff fe7c 	bl	8000e56 <lm60_init>
-  while (1)
+ 800115a:	f7ff feb9 	bl	8000ed0 <hw_conf_lm60>
+ //hw_i2c_eeprom_cfg_t m24c64_eeprom = hw_conf_m24c64_w();
+
+while (1)
   {
 	  lm60_get_temp(&lm60, &temp_c);
  800115e:	f107 020c 	add.w	r2, r7, #12
  8001162:	1d3b      	adds	r3, r7, #4
  8001164:	4611      	mov	r1, r2
  8001166:	4618      	mov	r0, r3
- 8001168:	f7ff feba 	bl	8000ee0 <lm60_get_temp>
+ 8001168:	f7ff fe76 	bl	8000e58 <lm60_get_temp>
 	  HAL_Delay(1000);
  800116c:	f44f 707a 	mov.w	r0, #1000	; 0x3e8
  8001170:	f000 f978 	bl	8001464 <HAL_Delay>

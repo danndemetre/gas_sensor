@@ -1,2 +1,1 @@
-lm60.c:11:12:lm60_init	136	static
-lm60.c:35:19:lm60_get_temp	24	static
+lm60.c:11:19:lm60_get_temp	24	static

@@ -5,14 +5,17 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Core/Src/components/EEPROM.c \
 ../Core/Src/components/ads1115.c \
 ../Core/Src/components/lm60.c 
 
 OBJS += \
+./Core/Src/components/EEPROM.o \
 ./Core/Src/components/ads1115.o \
 ./Core/Src/components/lm60.o 
 
 C_DEPS += \
+./Core/Src/components/EEPROM.d \
 ./Core/Src/components/ads1115.d \
 ./Core/Src/components/lm60.d 
 
@@ -24,7 +27,7 @@ Core/Src/components/%.o: ../Core/Src/components/%.c Core/Src/components/subdir.m
 clean: clean-Core-2f-Src-2f-components
 
 clean-Core-2f-Src-2f-components:
-	-$(RM) ./Core/Src/components/ads1115.d ./Core/Src/components/ads1115.o ./Core/Src/components/lm60.d ./Core/Src/components/lm60.o
+	-$(RM) ./Core/Src/components/EEPROM.d ./Core/Src/components/EEPROM.o ./Core/Src/components/ads1115.d ./Core/Src/components/ads1115.o ./Core/Src/components/lm60.d ./Core/Src/components/lm60.o
 
 .PHONY: clean-Core-2f-Src-2f-components
 
