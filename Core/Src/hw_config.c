@@ -103,4 +103,3 @@ void SystemClock_Config(void)
   */
   HAL_RCC_EnableCSS();
 }
-
