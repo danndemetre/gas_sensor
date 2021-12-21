@@ -231,7 +231,8 @@ HAL_StatusTypeDef ads1115_read_adc_millivolts(ads1115_i2c_conf_t* i2c_conf,
  * @param mv_value
  * @return An error if something goes wrong
  */
-HAL_StatusTypeDef ads1115_read_low_thresh(ads1115_i2c_conf_t* i2c_conf, ads1115_config_t *  conf, int16_t* mv_value);
+HAL_StatusTypeDef ads1115_read_low_thresh(ads1115_i2c_conf_t* i2c_conf,
+		ads1115_config_t *  conf, int16_t* mv_value);
 
 /**
  * @brief Reports the high comparator threshold settings in mv
@@ -240,7 +241,8 @@ HAL_StatusTypeDef ads1115_read_low_thresh(ads1115_i2c_conf_t* i2c_conf, ads1115_
  * @param mv_value
  * @return An error if something goes wrong
  */
-HAL_StatusTypeDef ads1115_read_high_thresh(ads1115_i2c_conf_t* i2c_conf,ads1115_config_t *  conf, int16_t* mv_value);
+HAL_StatusTypeDef ads1115_read_high_thresh(ads1115_i2c_conf_t* i2c_conf,
+		ads1115_config_t *  conf, int16_t* mv_value);
 
 /**
  * @brief Reads a voltage measurement from the corresponding dev_register, do not call function directly

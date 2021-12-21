@@ -20,7 +20,8 @@ uint16_t bytestowrite (i2c_eeprom_cfg_t* ee_conf, uint16_t size, uint16_t offset
 	else return ee_conf->page_size-offset;
 }
 
-HAL_StatusTypeDef EEPROM_Write (i2c_eeprom_cfg_t* ee_conf, uint16_t page, uint16_t offset, uint8_t *data, uint16_t size)
+HAL_StatusTypeDef EEPROM_Write (i2c_eeprom_cfg_t* ee_conf, uint16_t page,
+		uint16_t offset, uint8_t *data, uint16_t size)
 {
 	HAL_StatusTypeDef err = HAL_OK;
 	// Find out the number of bit, where the page addressing starts
@@ -43,7 +44,9 @@ HAL_StatusTypeDef EEPROM_Write (i2c_eeprom_cfg_t* ee_conf, uint16_t page, uint16
 		uint16_t MemAddress = startPage<<paddrposition | offset;
 		uint16_t bytesremaining = bytestowrite(ee_conf, size, offset);  // calculate the remaining bytes to be written
 
-		err = HAL_I2C_Mem_Write(ee_conf->hi2c, ee_conf->i2c_slave_addr, MemAddress, 2, &data[pos], bytesremaining, 1000);  // write the data to the EEPROM
+		 // write the data to the EEPROM
+		err = HAL_I2C_Mem_Write(ee_conf->hi2c, ee_conf->i2c_slave_addr, MemAddress, 2,
+				&data[pos], bytesremaining, ee_conf->timeout);
 
 		startPage += 1;  // increment the page, so that a new page address can be selected for further write
 		offset=0;   // since we will be writing to a new page, so offset will be 0

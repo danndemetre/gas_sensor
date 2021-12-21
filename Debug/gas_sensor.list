@@ -1103,7 +1103,7 @@ HAL_StatusTypeDef ads1115_write_cfg(ads1115_i2c_conf_t* i2c_conf, ads1115_config
  8000c0c:	89bb      	ldrh	r3, [r7, #12]
  8000c0e:	b2db      	uxtb	r3, r3
  8000c10:	727b      	strb	r3, [r7, #9]
-    err = HAL_I2C_Master_Transmit(i2c_conf->hi2c,  i2c_conf->i2c_slave_addr,  &ADS1115_CONFIGURATION_REG, 1, i2c_conf->timeout);
+    err = HAL_I2C_Master_Transmit(i2c_conf->hi2c,  i2c_conf->i2c_slave_addr,
  8000c12:	687b      	ldr	r3, [r7, #4]
  8000c14:	6818      	ldr	r0, [r3, #0]
  8000c16:	687b      	ldr	r3, [r7, #4]
@@ -1117,11 +1117,12 @@ HAL_StatusTypeDef ads1115_write_cfg(ads1115_i2c_conf_t* i2c_conf, ads1115_config
  8000c26:	f000 ffed 	bl	8001c04 <HAL_I2C_Master_Transmit>
  8000c2a:	4603      	mov	r3, r0
  8000c2c:	73fb      	strb	r3, [r7, #15]
+    		&ADS1115_CONFIGURATION_REG, 1, i2c_conf->timeout);
     if (err == HAL_OK){
  8000c2e:	7bfb      	ldrb	r3, [r7, #15]
  8000c30:	2b00      	cmp	r3, #0
  8000c32:	d10e      	bne.n	8000c52 <ads1115_write_cfg+0x6e>
-    	err = HAL_I2C_Master_Transmit(i2c_conf->hi2c, i2c_conf->i2c_slave_addr, raw_conf_eight_bit, 2, i2c_conf->timeout);
+    	err = HAL_I2C_Master_Transmit(i2c_conf->hi2c, i2c_conf->i2c_slave_addr,
  8000c34:	687b      	ldr	r3, [r7, #4]
  8000c36:	6818      	ldr	r0, [r3, #0]
  8000c38:	687b      	ldr	r3, [r7, #4]
@@ -1135,6 +1136,7 @@ HAL_StatusTypeDef ads1115_write_cfg(ads1115_i2c_conf_t* i2c_conf, ads1115_config
  8000c4a:	f000 ffdb 	bl	8001c04 <HAL_I2C_Master_Transmit>
  8000c4e:	4603      	mov	r3, r0
  8000c50:	73fb      	strb	r3, [r7, #15]
+    			raw_conf_eight_bit, 2, i2c_conf->timeout);
     }
    return err;
  8000c52:	7bfb      	ldrb	r3, [r7, #15]
@@ -1343,7 +1345,7 @@ HAL_StatusTypeDef ads1115_read_to_millivolts(ads1115_i2c_conf_t* i2c_conf,
  8000de2:	2b00      	cmp	r3, #0
  8000de4:	d132      	bne.n	8000e4c <ads1115_read_to_millivolts+0x98>
 		uint8_t conv_res_eight_bit[2];
-		err = HAL_I2C_Master_Transmit(i2c_conf->hi2c,  i2c_conf->i2c_slave_addr,  dev_register, 1, i2c_conf->timeout);
+		err = HAL_I2C_Master_Transmit(i2c_conf->hi2c,  i2c_conf->i2c_slave_addr,
  8000de6:	68fb      	ldr	r3, [r7, #12]
  8000de8:	6818      	ldr	r0, [r3, #0]
  8000dea:	68fb      	ldr	r3, [r7, #12]
@@ -1357,11 +1359,12 @@ HAL_StatusTypeDef ads1115_read_to_millivolts(ads1115_i2c_conf_t* i2c_conf,
  8000dfa:	f000 ff03 	bl	8001c04 <HAL_I2C_Master_Transmit>
  8000dfe:	4603      	mov	r3, r0
  8000e00:	75fb      	strb	r3, [r7, #23]
+				dev_register, 1, i2c_conf->timeout);
 		if (err == HAL_OK){
  8000e02:	7dfb      	ldrb	r3, [r7, #23]
  8000e04:	2b00      	cmp	r3, #0
  8000e06:	d10e      	bne.n	8000e26 <ads1115_read_to_millivolts+0x72>
-			err = HAL_I2C_Master_Receive(i2c_conf->hi2c, i2c_conf->i2c_slave_addr, conv_res_eight_bit, 2, i2c_conf->timeout);
+			err = HAL_I2C_Master_Receive(i2c_conf->hi2c, i2c_conf->i2c_slave_addr,
  8000e08:	68fb      	ldr	r3, [r7, #12]
  8000e0a:	6818      	ldr	r0, [r3, #0]
  8000e0c:	68fb      	ldr	r3, [r7, #12]
@@ -1375,6 +1378,7 @@ HAL_StatusTypeDef ads1115_read_to_millivolts(ads1115_i2c_conf_t* i2c_conf,
  8000e1e:	f000 ffef 	bl	8001e00 <HAL_I2C_Master_Receive>
  8000e22:	4603      	mov	r3, r0
  8000e24:	75fb      	strb	r3, [r7, #23]
+					conv_res_eight_bit, 2, i2c_conf->timeout);
 		}
 		raw_value = ((int16_t)conv_res_eight_bit[0] << 8 )| conv_res_eight_bit[1];
  8000e26:	7c3b      	ldrb	r3, [r7, #16]
