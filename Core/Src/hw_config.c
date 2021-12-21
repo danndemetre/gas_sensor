@@ -8,45 +8,34 @@
 #include "stm32f1xx_hal.h"
 
 lm60_cfg_t hw_conf_lm60(){
-	ads1115_i2c_conf_t ads1115_i2c_conf = (ads1115_i2c_conf_t){
-			.hi2c = hw_conf_lm60_ads1115().ads1115_hi2c,
-			.i2c_slave_addr =hw_conf_lm60_ads1115().ads1115_i2c_slave_addr,
-			.timeout = hw_conf_lm60_ads1115().ads1115_timeout,
-	};
-	ads1115_config_t ads1115_reg_config = 	 (ads1115_config_t){
+	return (lm60_cfg_t){
+		.ads_i2c_conf = (ads1115_i2c_conf_t){
+			.hi2c =&hi2c1,
+			.i2c_slave_addr =ADS1115BUS_ADDRESS_GND,
+			.timeout = 100,
+		},
+	   .ads_reg_conf =  (ads1115_config_t){
 			.os = ADS1115_OS,
-			.pin = hw_conf_lm60_ads1115().ads1115_pin,
+			.pin = ADS1115_AIN1_COMP_GND,
 			.gain = ADS1115_1_024V,
 			.mode = ADS1115_SINGLE_SHOT,
 			.data_rate = ADS1115_DEF_SPS,
 			.comp = ADS1115_DEF_COMP,
 			.polarity = ADS1115_DEF_POL,
 			.latch = ADS1115_DEF_LATCH,
-			.queue = ADS1115_COMP_DISABLE,
-	};
-
-	return (lm60_cfg_t){
-		.ads_i2c_conf = &ads1115_i2c_conf,
-		.ads_reg_conf = &ads1115_reg_config,
+			.que = ADS1115_COMP_DISABLE,
+		},
 	};
 }
 
 i2c_eeprom_cfg_t hw_conf_m24c64_w(){
 	return (i2c_eeprom_cfg_t){
-		.hi2c = &hi2c2,
+		.hi2c = &hi2c1,
 		.i2c_slave_addr = 0xA0,
 		.timeout = 100, //ms
 		.page_size = 32, //Bytes
 		.pages = 256,
 	};
-}
-
-hw_conf_lm60_t hw_conf_lm60_ads1115(){
-	return (hw_conf_lm60_t){
-		.ads1115_hi2c = &hi2c2,
-		.ads1115_i2c_slave_addr = ADS1115BUS_ADDRESS_GND,
-		.ads1115_timeout = 100,
-		.ads1115_pin = ADS1115_AIN1_COMP_GND };
 }
 
 void MX_USART1_UART_Init(void)
@@ -60,6 +49,43 @@ void MX_USART1_UART_Init(void)
   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
   if (HAL_UART_Init(&huart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
+
+void MX_CAN_Init(void)
+{
+  hcan.Instance = CAN1;
+  hcan.Init.Prescaler = 16;
+  hcan.Init.Mode = CAN_MODE_NORMAL;
+  hcan.Init.SyncJumpWidth = CAN_SJW_1TQ;
+  hcan.Init.TimeSeg1 = CAN_BS1_1TQ;
+  hcan.Init.TimeSeg2 = CAN_BS2_1TQ;
+  hcan.Init.TimeTriggeredMode = DISABLE;
+  hcan.Init.AutoBusOff = DISABLE;
+  hcan.Init.AutoWakeUp = DISABLE;
+  hcan.Init.AutoRetransmission = DISABLE;
+  hcan.Init.ReceiveFifoLocked = DISABLE;
+  hcan.Init.TransmitFifoPriority = DISABLE;
+  if (HAL_CAN_Init(&hcan) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
+
+void MX_I2C1_Init(void)
+{
+  hi2c1.Instance = I2C1;
+  hi2c1.Init.ClockSpeed = 100000;
+  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c1.Init.OwnAddress1 = 0;
+  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c1.Init.OwnAddress2 = 0;
+  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
   {
     Error_Handler();
   }

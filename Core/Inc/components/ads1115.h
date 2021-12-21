@@ -151,7 +151,7 @@ enum ads1115_latch {
 /**
  * @brief The ADC comparator comparator queue and disable
  */
-enum ads1115_queue {
+enum ads1115_que {
 	ADS1115_ONE_CONV         = 0b00,
 	ADS1115_TWO_CONV        = 0b01,
 	ADS1115_FOUR_CONV       = 0b10,
@@ -170,7 +170,7 @@ struct ads1115_config {
 	    enum ads1115_comparator comp;
 		enum ads1115_polarity polarity;
 		enum ads1115_latch latch;
-		enum ads1115_queue queue;
+		enum ads1115_que que;
 };
 
 /**

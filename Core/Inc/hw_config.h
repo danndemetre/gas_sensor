@@ -13,6 +13,24 @@
 #include "components/EEPROM.h"
 
 /**
+ * @brief Read/write bits
+ */
+enum i2c_rw {
+	I2C_READ  = 0b0,
+	I2C_WRITE = 0b1,
+};
+
+/**
+ * @brief The CANbusHAL struct
+ */
+CAN_HandleTypeDef hcan;
+
+/**
+ * @brief The I2C port 1 HAL struct
+ */
+I2C_HandleTypeDef hi2c1;
+
+/**
  * @brief The I2C port 2 HAL struct
  */
 I2C_HandleTypeDef hi2c2;
@@ -34,11 +52,6 @@ lm60_cfg_t hw_conf_lm60();
 i2c_eeprom_cfg_t hw_conf_m24c64_w();
 
 /**
- * @return HW configuration for the LM60 temperature sensor
- */
-hw_conf_lm60_t hw_conf_lm60_ads1115();
-
-/**
   * @brief  This function is executed in case of error occurrence.
   * @retval None
   */
@@ -50,6 +63,16 @@ void Error_Handler(void);
   * @retval None
   */
 void MX_USART1_UART_Init(void);
+
+/**
+ * @breif setup the CANbus port
+ */
+void MX_CAN_Init(void);
+
+/**
+ * @brief Setup the I2C1 port
+ */
+void MX_I2C1_Init(void);
 
 /**
  * @brief Setup the I2C2 port
