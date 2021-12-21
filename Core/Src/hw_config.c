@@ -41,13 +41,13 @@ i2c_eeprom_cfg_t hw_conf_m24c64_w(){
 	};
 }
 
-struct  hw_conf_lm60 hw_conf_lm60_ads1115(){
-	return (struct hw_conf_lm60){
+hw_conf_lm60_t hw_conf_lm60_ads1115(){
+	return (hw_conf_lm60_t){
 		.ads1115_hi2c = &hi2c2,
 		.ads1115_i2c_slave_addr = ADS1115BUS_ADDRESS_GND,
+		.ads1115_timeout = 100,
 		.ads1115_pin = ADS1115_AIN1_COMP_GND };
 }
-
 
 void MX_USART1_UART_Init(void)
 {

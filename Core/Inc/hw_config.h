@@ -36,7 +36,7 @@ i2c_eeprom_cfg_t hw_conf_m24c64_w();
 /**
  * @return HW configuration for the LM60 temperature sensor
  */
-struct  hw_conf_lm60 hw_conf_lm60_ads1115();
+hw_conf_lm60_t hw_conf_lm60_ads1115();
 
 /**
   * @brief  This function is executed in case of error occurrence.
