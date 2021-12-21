@@ -43,8 +43,10 @@ HAL_StatusTypeDef EEPROM_Write (i2c_eeprom_cfg_t* ee_conf, uint16_t page,
 		 */
 		uint16_t MemAddress = startPage<<paddrposition | offset;
 		uint16_t bytesremaining = bytestowrite(ee_conf, size, offset);  // calculate the remaining bytes to be written
-
-		 // write the data to the EEPROM
+		if(ee_conf->write_protect){
+			HAL_GPIO_WritePin (ee_conf->write_protect_port, ee_conf->write_protect_pin, GPIO_PIN_RESET);
+		}
+		// write the data to the EEPROM
 		err = HAL_I2C_Mem_Write(ee_conf->hi2c, ee_conf->i2c_slave_addr, MemAddress, 2,
 				&data[pos], bytesremaining, ee_conf->timeout);
 
@@ -54,7 +56,10 @@ HAL_StatusTypeDef EEPROM_Write (i2c_eeprom_cfg_t* ee_conf, uint16_t page,
 		pos += bytesremaining;  // update the position for the data buffer
 
 		HAL_Delay (5);  // Write cycle delay (5ms)
-		 i++;
+		if(ee_conf->write_protect){
+			HAL_GPIO_WritePin (ee_conf->write_protect_port, ee_conf->write_protect_pin, GPIO_PIN_SET);
+		}
+		i++;
 	}
 	return err;
 }
@@ -143,8 +148,15 @@ HAL_StatusTypeDef EEPROM_PageErase (i2c_eeprom_cfg_t* ee_conf, uint16_t page)
 	memset(data,0xff,ee_conf->page_size);
 
 	// write the data to the EEPROM
+	if(ee_conf->write_protect){
+		HAL_GPIO_WritePin (ee_conf->write_protect_port, ee_conf->write_protect_pin, GPIO_PIN_RESET);
+	}
 	err = HAL_I2C_Mem_Write(ee_conf->hi2c, ee_conf->i2c_slave_addr, MemAddress, 2, data, ee_conf->page_size, ee_conf->timeout);
 
 	HAL_Delay (5);  // write cycle delay 
+
+	if(ee_conf->write_protect){
+		HAL_GPIO_WritePin (ee_conf->write_protect_port, ee_conf->write_protect_pin, GPIO_PIN_SET);
+	}
 	return err;
 }

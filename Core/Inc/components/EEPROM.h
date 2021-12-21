@@ -12,7 +12,7 @@
 
 #include "stdint.h"
 #include "stm32f1xx_hal.h"
-
+#include <stdbool.h>
 /**
  * @brief this is the hardware configuration for the eeprom
  */
@@ -21,6 +21,9 @@ struct i2c_eeprom_cfg{
     uint8_t i2c_slave_addr; /**< The slave address configured in hardware */
     uint32_t timeout; /**< The maximum amount of milliseconds to wait for
                                an I2C ee_conf */
+    bool write_protect;  //whether or not write protection is used on the EEPROM
+    GPIO_TypeDef *  write_protect_port; //the GPIO port of the write protection pin being used
+    uint16_t write_protect_pin; //the GPIO port of the write protection pin being used
 	uint16_t page_size; //Bytes
 	uint16_t pages;
 };

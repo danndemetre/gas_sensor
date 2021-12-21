@@ -6,6 +6,7 @@
  */
 #include "hw_config.h"
 #include "stm32f1xx_hal.h"
+#include "stdbool.h"
 
 lm60_cfg_t hw_conf_lm60(){
 	return (lm60_cfg_t){
@@ -33,6 +34,9 @@ i2c_eeprom_cfg_t hw_conf_m24c64_w(){
 		.hi2c = &hi2c1,
 		.i2c_slave_addr = 0xA0,
 		.timeout = 100, //ms
+		.write_protect = true,
+		.write_protect_port =GPIOC,
+		.write_protect_pin = GPIO_PIN_13,
 		.page_size = 32, //Bytes
 		.pages = 256,
 	};
@@ -121,10 +125,23 @@ void Error_Handler(void)
 
 void MX_GPIO_Init(void)
 {
-  /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOD_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
-  __HAL_RCC_GPIOA_CLK_ENABLE();
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+	/* GPIO Ports Clock Enable */
+	__HAL_RCC_GPIOC_CLK_ENABLE();
+	__HAL_RCC_GPIOD_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+
+	/*Configure GPIO pin Output Level */
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+
+	/*Configure GPIO pin : PC13 */
+	GPIO_InitStruct.Pin = GPIO_PIN_13;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_PULLUP;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 }
 
 void SystemClock_Config(void)

@@ -1,4 +1,3 @@
-
 #include "main.h"
 #include "hw_config.h"
 
@@ -28,3 +27,5 @@ int main(void)
 	 HAL_Delay(1000);
   }
 }
+
+
