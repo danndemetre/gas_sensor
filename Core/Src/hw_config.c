@@ -31,8 +31,8 @@ lm60_cfg_t hw_conf_lm60(){
 	};
 }
 
-hw_i2c_eeprom_cfg_t hw_conf_m24c64_w(){
-	return (hw_i2c_eeprom_cfg_t){
+i2c_eeprom_cfg_t hw_conf_m24c64_w(){
+	return (i2c_eeprom_cfg_t){
 		.hi2c = &hi2c2,
 		.i2c_slave_addr = 0xA0,
 		.timeout = 100, //ms

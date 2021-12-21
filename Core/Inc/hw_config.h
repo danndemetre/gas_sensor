@@ -31,7 +31,7 @@ lm60_cfg_t hw_conf_lm60();
 /**
  * @return the hardware configuration for the EEPROM
  */
-hw_i2c_eeprom_cfg_t hw_conf_m24c64_w();
+i2c_eeprom_cfg_t hw_conf_m24c64_w();
 
 /**
  * @return HW configuration for the LM60 temperature sensor

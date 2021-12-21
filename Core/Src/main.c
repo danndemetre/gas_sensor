@@ -32,7 +32,7 @@ int main(void)
 
  float temp_c = 0;
  lm60_cfg_t  lm60 = hw_conf_lm60();
- //hw_i2c_eeprom_cfg_t m24c64_eeprom = hw_conf_m24c64_w();
+ //i2c_eeprom_cfg_t m24c64_eeprom = hw_conf_m24c64_w();
 
 while (1)
   {

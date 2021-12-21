@@ -13,7 +13,6 @@
 #define ADS1115_BUS_ADDRESS_VDD 0x49
 #define ADS1115_BUS_ADDRESS_SCL  0x4B
 
-
 /**
  * @brief A raw read configuration
  */
