@@ -52,10 +52,6 @@ HAL_StatusTypeDef ads1115_read_cfg(const ads1115_i2c_conf_t* i2c_conf, ads1115_c
     HAL_StatusTypeDef err;
     uint8_t raw_conf_eight_bit[2];
 
-    if (i2c_conf == NULL) {
-        return HAL_ERROR;
-    }
-
     err = HAL_I2C_Master_Transmit(i2c_conf->hi2c, (i2c_conf->i2c_slave_addr << 1) | I2C_WRITE,  &ADS1115_CONFIGURATION_REG, 1, i2c_conf->timeout);
     if (err == HAL_OK){
     	err = HAL_I2C_Master_Receive(i2c_conf->hi2c, (i2c_conf->i2c_slave_addr << 1) | I2C_READ, raw_conf_eight_bit, 2, i2c_conf->timeout);
