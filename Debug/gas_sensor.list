@@ -2355,11 +2355,12 @@ int main(void)
  8001530:	f04f 33ff 	mov.w	r3, #4294967295	; 0xffffffff
  8001534:	4806      	ldr	r0, [pc, #24]	; (8001550 <main+0xc8>)
  8001536:	f002 fa3c 	bl	80039b2 <HAL_UART_Transmit>
-	 HAL_Delay(1000);
- 800153a:	f44f 707a 	mov.w	r0, #1000	; 0x3e8
- 800153e:	f000 fa3d 	bl	80019bc <HAL_Delay>
+	 HAL_Delay(150);
+ 800153a:	2096      	movs	r0, #150	; 0x96
+ 800153c:	f000 fa3e 	bl	80019bc <HAL_Delay>
 	  lm60_get_temp(&lm60, &temp_c);
- 8001542:	e7b9      	b.n	80014b8 <main+0x30>
+ 8001540:	e7ba      	b.n	80014b8 <main+0x30>
+ 8001542:	bf00      	nop
  8001544:	447a0000 	.word	0x447a0000
  8001548:	10624dd3 	.word	0x10624dd3
  800154c:	08004578 	.word	0x08004578

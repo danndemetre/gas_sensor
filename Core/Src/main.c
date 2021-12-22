@@ -30,6 +30,6 @@ int main(void)
       sprintf((char*)buf, "%d.%u C\r\n",  ((int)temp_c / 1000),
             (abs(( int)temp_c) % 1000));
       HAL_UART_Transmit(&huart1, buf, strlen((char*)buf), HAL_MAX_DELAY);
-	 HAL_Delay(1000);
+	 HAL_Delay(150);
   }
 }
