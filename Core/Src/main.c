@@ -21,6 +21,7 @@ int main(void)
   MX_CAN_Init();
   MX_I2C1_Init();
 
+  HAL_Delay(50); //allow the ADS to come up
   float temp_c = 0;
   lm60_cfg_t lm60 = hw_conf_lm60();
 

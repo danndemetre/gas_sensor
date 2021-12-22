@@ -21,6 +21,15 @@ struct lm60_config {
 typedef struct lm60_config lm60_cfg_t;
 
 /**
+ * @brief Start the temperature conversion process, if running in any other mode than
+ * 			single-shot non-blocking than it is not necessary to call this function
+ * @param lm60_cfg
+ * @param temp_c
+ * @return An error if something went wrong
+ */
+HAL_StatusTypeDef lm60_init_temp_conv(const lm60_cfg_t* lm60_cfg);
+
+/**
  * @brief  Gets the temperature of the LM60 attached to the ADS1115
  * @param i2c_conf
  * @param conf

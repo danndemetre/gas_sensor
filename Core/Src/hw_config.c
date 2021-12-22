@@ -14,6 +14,7 @@ const lm60_cfg_t hw_conf_lm60(){
 			.hi2c =&hi2c1,
 			.i2c_slave_addr =ADS1115BUS_ADDRESS_GND,
 			.timeout = 100,
+			.single_shot_block = true,
 		},
 	   .ads_reg_conf =  (const ads1115_config_t){
 			.os = ADS1115_OS,

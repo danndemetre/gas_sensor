@@ -8,6 +8,7 @@
  */
 #include "stm32f1xx_hal.h"
 #include <stdint.h>
+#include <stdbool.h>
 
 #define ADS1115BUS_ADDRESS_GND  0x48
 #define ADS1115_BUS_ADDRESS_VDD 0x49
@@ -36,6 +37,8 @@ struct ads1115_i2c_conf {
     uint8_t i2c_slave_addr; /**< The slave address configured in hardware */
     uint32_t timeout; /**< The maximum amount of milliseconds to wait for
                                an I2C i2c_conf */
+    bool single_shot_block; /*whether to block everything and wait for reading to be processed
+     	 	 	 	 	 	 	 	 	 	 when in single shot mode*/
 };
 
 /**
@@ -187,6 +190,16 @@ struct ads1115_config {
  * @brief A parsed read configuration
  */
 typedef  struct ads1115_config ads1115_config_t;
+
+/**
+ * @brief starts a single shot conversion of the ADC, supporting both blocking and non-block
+ * 			mode.
+ * @param i2c_conf
+ * @param conf
+ * @return An error if something went wrong
+ */
+HAL_StatusTypeDef ads1115_start_reading(const ads1115_i2c_conf_t* i2c_conf,
+		const ads1115_config_t * conf);
 
 /**
  * @brief encodes the configuration to a raw result for the ADC config reg.

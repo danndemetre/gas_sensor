@@ -87,6 +87,30 @@ HAL_StatusTypeDef __ads1115_convert_raw_voltage(const ads1115_config_t * conf,
     return err;
 }
 
+HAL_StatusTypeDef ads1115_start_reading(const ads1115_i2c_conf_t* i2c_conf,
+		const ads1115_config_t * conf){
+
+	HAL_StatusTypeDef err = HAL_OK;
+	ads1115_config_t cnf_cpy = *conf;
+	cnf_cpy.os = ADS1115_IDLE_OR_START;
+	ads1115_write_cfg(i2c_conf, &cnf_cpy);
+	cnf_cpy.os = ADS1115_OS;
+
+	if(i2c_conf->single_shot_block){
+		uint32_t st_time = HAL_GetTick();
+		bool timeout = false;
+		err = ads1115_read_cfg(i2c_conf,  &cnf_cpy);
+		while( (err == HAL_OK) && !timeout && (cnf_cpy.os == ADS1115_OS) ){
+			 err = ads1115_read_cfg(i2c_conf,  &cnf_cpy);
+			 HAL_Delay(5);
+			 timeout = ((HAL_GetTick() - st_time) > 125) ? true : false;
+		}
+		if (timeout){
+			err = HAL_TIMEOUT;
+		}
+	}
+	return err;
+}
 HAL_StatusTypeDef __ads1115_read_to_microvolts(const ads1115_i2c_conf_t* i2c_conf,
 		const ads1115_config_t *  conf, int32_t* uv_value, const uint8_t dev_register)
 {
@@ -95,10 +119,7 @@ HAL_StatusTypeDef __ads1115_read_to_microvolts(const ads1115_i2c_conf_t* i2c_con
 	HAL_StatusTypeDef err = HAL_OK;
 
 	if(conf->mode == ADS1115_SINGLE_SHOT){
-		ads1115_config_t cnf_cpy = *conf;
-		cnf_cpy.os = ADS1115_IDLE_OR_START;
-		ads1115_write_cfg(i2c_conf, &cnf_cpy);
-		cnf_cpy.mode = ADS1115_SINGLE_SHOT;
+		ads1115_start_reading(i2c_conf, conf);
 	}
 
 	if (err == HAL_OK){
