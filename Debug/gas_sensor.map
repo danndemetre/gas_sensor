@@ -539,7 +539,7 @@ Discarded input sections
  .bss           0x0000000000000000        0x0 ./Core/Src/hw_config.o
  .text.hw_conf_m24c64_w
                 0x0000000000000000       0x2c ./Core/Src/hw_config.o
- .rodata.C.0.6166
+ .rodata.C.0.6161
                 0x0000000000000000       0x1c ./Core/Src/hw_config.o
  .debug_macro   0x0000000000000000      0xa9c ./Core/Src/hw_config.o
  .debug_macro   0x0000000000000000       0x22 ./Core/Src/hw_config.o
