@@ -32,5 +32,3 @@ int main(void)
 	 HAL_Delay(1000);
   }
 }
-
-

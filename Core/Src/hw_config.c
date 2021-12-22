@@ -10,7 +10,7 @@
 
 const lm60_cfg_t hw_conf_lm60(){
 	return (const lm60_cfg_t){
-		.ads_i2c_conf = (const ads1115_i2c_conf_t){
+		.ads_i2c_conf = (ads1115_i2c_conf_t){
 			.hi2c =&hi2c1,
 			.i2c_slave_addr =ADS1115BUS_ADDRESS_GND,
 			.timeout = 100,

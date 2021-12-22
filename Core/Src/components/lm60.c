@@ -9,10 +9,11 @@
 #include "stdlib.h"
 
 HAL_StatusTypeDef lm60_get_temp(const lm60_cfg_t* lm60_conf, float * temp_c){
-	int16_t mv;
-	HAL_StatusTypeDef err = ads1115_read_adc_millivolts(&lm60_conf->ads_i2c_conf, &lm60_conf->ads_reg_conf, &mv);
-	if( err == HAL_OK){
-		* temp_c = (mv - 424) / 6.25;
+	int32_t uv;
+	HAL_StatusTypeDef err;
+     err = ads1115_read_adc_microvolts(&lm60_conf->ads_i2c_conf, &lm60_conf->ads_reg_conf, &uv);
+	 if( err == HAL_OK){
+		* temp_c = (uv - 424000) / 6250.0;
 	}
 	return err;
 }

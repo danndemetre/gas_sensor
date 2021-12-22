@@ -52,7 +52,8 @@ HAL_StatusTypeDef ads1115_read_cfg(const ads1115_i2c_conf_t* i2c_conf, ads1115_c
     HAL_StatusTypeDef err;
     uint8_t raw_conf_eight_bit[2];
 
-    err = HAL_I2C_Master_Transmit(i2c_conf->hi2c, (i2c_conf->i2c_slave_addr << 1) | I2C_WRITE,  &ADS1115_CONFIGURATION_REG, 1, i2c_conf->timeout);
+    err = HAL_I2C_Master_Transmit(&hi2c1, (i2c_conf->i2c_slave_addr << 1) | I2C_WRITE,  &ADS1115_CONFIGURATION_REG, 1, i2c_conf->timeout);
+
     if (err == HAL_OK){
     	err = HAL_I2C_Master_Receive(i2c_conf->hi2c, (i2c_conf->i2c_slave_addr << 1) | I2C_READ, raw_conf_eight_bit, 2, i2c_conf->timeout);
     }
@@ -61,8 +62,8 @@ HAL_StatusTypeDef ads1115_read_cfg(const ads1115_i2c_conf_t* i2c_conf, ads1115_c
     return err;
 }
 
-HAL_StatusTypeDef ads1115_write_cfg(const ads1115_i2c_conf_t* i2c_conf,
-		const ads1115_config_t * conf)
+HAL_StatusTypeDef ads1115_write_cfg(const ads1115_i2c_conf_t* i2c_conf, const ads1115_config_t * conf)
+
 {
 	 HAL_StatusTypeDef err;
     ads1115_raw_conf_t raw_conf = ads1115_encode_cfg(conf);
@@ -74,12 +75,10 @@ HAL_StatusTypeDef ads1115_write_cfg(const ads1115_i2c_conf_t* i2c_conf,
 }
 
 HAL_StatusTypeDef __ads1115_convert_raw_voltage(const ads1115_config_t * conf,
-                                         const int16_t raw_value, int16_t* converted_value)
+		const int16_t raw_value, int32_t* converted_value)
+
 {
-    if (converted_value == NULL) {
-        return HAL_ERROR;
-    }
-    double buf = ((double)raw_value / 32768);
+    double buf = ((double)raw_value / 32.768);
     HAL_StatusTypeDef err = HAL_OK;
     switch (conf->gain) {
 		case ADS1115_6_144V: buf = buf * 6144; break;
@@ -91,38 +90,24 @@ HAL_StatusTypeDef __ads1115_convert_raw_voltage(const ads1115_config_t * conf,
 		default: return HAL_ERROR;
     }
 
-    *converted_value = (uint16_t)buf;
+    *converted_value = (uint32_t)buf;
 
     return err;
 }
 
-HAL_StatusTypeDef ads1115_read_adc_millivolts(const ads1115_i2c_conf_t* i2c_conf,
-		const ads1115_config_t *  conf, int16_t* mv)
-{
-	return ads1115_read_to_millivolts(i2c_conf, conf, mv, &ADS1115_CONVERSION_REG);
-}
-
-HAL_StatusTypeDef ads1115_read_low_thresh(const ads1115_i2c_conf_t* i2c_conf,
-		const ads1115_config_t *  conf, int16_t* mv_value){
-	return ads1115_read_to_millivolts(i2c_conf, conf, mv_value, &ADS1115_LOW_THRES_REG);
-}
-
-HAL_StatusTypeDef ads1115_read_high_thresh(const ads1115_i2c_conf_t* i2c_conf,
-		const ads1115_config_t *  conf, int16_t* mv_value){
-	return ads1115_read_to_millivolts(i2c_conf, conf, mv_value, &ADS1115_HIGH_THRES_REG);
-}
-
-HAL_StatusTypeDef ads1115_read_to_millivolts(const ads1115_i2c_conf_t* i2c_conf,
-		const ads1115_config_t *  conf, int16_t* mv_value, uint8_t * dev_register)
+HAL_StatusTypeDef __ads1115_read_to_microvolts(const ads1115_i2c_conf_t* i2c_conf,
+		const ads1115_config_t *  conf, int32_t* uv_value, uint8_t * dev_register)
 {
 	int16_t raw_value = 0;
+	HAL_StatusTypeDef err = HAL_OK;
 
-	HAL_StatusTypeDef err = HAL_OK;;
-
-	if (i2c_conf == NULL) {
-		return err;
+	if(conf->mode == ADS1115_SINGLE_SHOT){
+		ads1115_config_t cnf_cpy = *conf;
+		cnf_cpy.os = ADS1115_IDLE_OR_START;
+		ads1115_write_cfg(i2c_conf, &cnf_cpy);
+		cnf_cpy.mode = ADS1115_SINGLE_SHOT;
 	}
-	err = ads1115_write_cfg(i2c_conf, conf);
+
 	if (err == HAL_OK){
 		uint8_t conv_res_eight_bit[2];
 		err = HAL_I2C_Master_Transmit(i2c_conf->hi2c,  (i2c_conf->i2c_slave_addr << 1) | I2C_WRITE,
@@ -133,26 +118,38 @@ HAL_StatusTypeDef ads1115_read_to_millivolts(const ads1115_i2c_conf_t* i2c_conf,
 		}
 		raw_value = ((int16_t)conv_res_eight_bit[0] << 8 )| conv_res_eight_bit[1];
 		if (err == HAL_OK) {
-			err = __ads1115_convert_raw_voltage(conf, raw_value, mv_value);
+			err = __ads1115_convert_raw_voltage(conf, raw_value, uv_value);
 		}
 	}
 	return err;
 }
 
-HAL_StatusTypeDef ads1115_write_low_thresh(const ads1115_i2c_conf_t* i2c_conf,
-		const ads1115_config_t *  conf, int16_t* mv_value){
-	return ads1115_write_to_millivolts( i2c_conf,  conf,  mv_value, &ADS1115_LOW_THRES_REG);
-}
-
-HAL_StatusTypeDef ads1115_write_high_thresh(const ads1115_i2c_conf_t* i2c_conf,
-		const ads1115_config_t *  conf, int16_t* mv_value){
-	return ads1115_write_to_millivolts( i2c_conf,  conf,  mv_value, &ADS1115_HIGH_THRES_REG);
-}
-
-HAL_StatusTypeDef ads1115_write_to_millivolts(const ads1115_i2c_conf_t* i2c_conf,
-		const ads1115_config_t *  conf, int16_t* mv_value, const uint8_t * dev_register)
+HAL_StatusTypeDef ads1115_read_adc_microvolts(const ads1115_i2c_conf_t* i2c_conf,
+		const ads1115_config_t *  conf, int32_t* uv)
 {
+	return __ads1115_read_to_microvolts(i2c_conf, conf, uv, &ADS1115_CONVERSION_REG);
+}
+
+HAL_StatusTypeDef ads1115_read_low_thresh(const ads1115_i2c_conf_t* i2c_conf,
+		const ads1115_config_t *  conf, int32_t* uv_value){
+	return __ads1115_read_to_microvolts(i2c_conf, conf, uv_value, &ADS1115_LOW_THRES_REG);
+}
+
+HAL_StatusTypeDef ads1115_read_high_thresh(const ads1115_i2c_conf_t* i2c_conf,
+		const ads1115_config_t *  conf, int32_t* uv_value){
+	return __ads1115_read_to_microvolts(i2c_conf, conf, uv_value, &ADS1115_HIGH_THRES_REG);
+}
+
+HAL_StatusTypeDef __ads1115_write_to_microvolts(const ads1115_i2c_conf_t* i2c_conf,
+		const ads1115_config_t *  conf, int32_t* uv_value, uint8_t * dev_register)
+{
+
     HAL_StatusTypeDef err;
+    err = ads1115_write_cfg(i2c_conf, conf);
+	if (err != HAL_OK){
+		return err;
+	}
+
 	int16_t gain;
 	uint16_t discrete_steps = 32768;
 
@@ -165,8 +162,18 @@ HAL_StatusTypeDef ads1115_write_to_millivolts(const ads1115_i2c_conf_t* i2c_conf
 		case ADS1115_0_256V: gain = 256; break;
 		default: return HAL_ERROR;
     }
-    ads1115_raw_conf_t raw_value = (int16_t) ((int32_t)(*mv_value * discrete_steps) / gain);
+    ads1115_raw_conf_t raw_value = (int16_t) ((*uv_value * discrete_steps) / (gain*1000));
     uint8_t i2c_buf[3] = { (uint8_t)*dev_register, raw_value>> 8, raw_value & 0xFF};
     err = HAL_I2C_Master_Transmit(i2c_conf->hi2c,  (i2c_conf->i2c_slave_addr << 1) | I2C_WRITE,  i2c_buf, 3, i2c_conf->timeout);
     return err;
+}
+
+HAL_StatusTypeDef ads1115_write_low_thresh(const ads1115_i2c_conf_t* i2c_conf,
+		const ads1115_config_t *  conf, int32_t* uv_value){
+	return __ads1115_write_to_microvolts( i2c_conf,  conf,  uv_value, &ADS1115_LOW_THRES_REG);
+}
+
+HAL_StatusTypeDef ads1115_write_high_thresh(const ads1115_i2c_conf_t* i2c_conf,
+		const ads1115_config_t *  conf, int32_t* uv_value){
+	return __ads1115_write_to_microvolts( i2c_conf,  conf,  uv_value, &ADS1115_HIGH_THRES_REG);
 }
