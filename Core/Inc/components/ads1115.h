@@ -255,6 +255,7 @@ HAL_StatusTypeDef ads1115_read_high_thresh(const ads1115_i2c_conf_t* i2c_conf,
 HAL_StatusTypeDef ads1115_read_adc_microvolts(const ads1115_i2c_conf_t* i2c_conf,
 		const ads1115_config_t *  conf, int32_t* uv);
 
+
 /**
  * @brief Reads a voltage measurement from the corresponding dev_register, do not call function directly
  * @param i2c_conf
@@ -265,6 +266,7 @@ HAL_StatusTypeDef ads1115_read_adc_microvolts(const ads1115_i2c_conf_t* i2c_conf
  */
 HAL_StatusTypeDef ads1115_read_to_microvolts(const ads1115_i2c_conf_t* i2c_conf,
 		const ads1115_config_t *  conf, int32_t* uv_value, uint8_t * dev_register);
+
 
 /**
  * @brief Writes to the low comparator threshold settings in uv

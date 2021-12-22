@@ -15,7 +15,7 @@ const lm60_cfg_t hw_conf_lm60(){
 			.i2c_slave_addr =ADS1115BUS_ADDRESS_GND,
 			.timeout = 100,
 		},
-	   .ads_reg_conf =  (ads1115_config_t){
+	   .ads_reg_conf =  (const ads1115_config_t){
 			.os = ADS1115_OS,
 			.pin = ADS1115_AIN1_COMP_GND,
 			.gain = ADS1115_1_024V,

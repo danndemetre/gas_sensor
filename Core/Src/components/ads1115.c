@@ -53,8 +53,9 @@ HAL_StatusTypeDef ads1115_read_cfg(const ads1115_i2c_conf_t* i2c_conf, ads1115_c
     uint8_t raw_conf_eight_bit[2];
 
     err = HAL_I2C_Master_Transmit(&hi2c1, (i2c_conf->i2c_slave_addr << 1) | I2C_WRITE,  &ADS1115_CONFIGURATION_REG, 1, i2c_conf->timeout);
+
     if (err == HAL_OK){
-    	err = HAL_I2C_Master_Receive(&hi2c1, (i2c_conf->i2c_slave_addr << 1) | I2C_READ, raw_conf_eight_bit, 2, i2c_conf->timeout);
+    	err = HAL_I2C_Master_Receive(i2c_conf->hi2c, (i2c_conf->i2c_slave_addr << 1) | I2C_READ, raw_conf_eight_bit, 2, i2c_conf->timeout);
     }
     raw_conf = ((ads1115_raw_conf_t)raw_conf_eight_bit[0] << 8 )| raw_conf_eight_bit[1];
     *conf = ads1115_decode_cfg(raw_conf);
@@ -62,6 +63,7 @@ HAL_StatusTypeDef ads1115_read_cfg(const ads1115_i2c_conf_t* i2c_conf, ads1115_c
 }
 
 HAL_StatusTypeDef ads1115_write_cfg(const ads1115_i2c_conf_t* i2c_conf, const ads1115_config_t * conf)
+
 {
 	 HAL_StatusTypeDef err;
     ads1115_raw_conf_t raw_conf = ads1115_encode_cfg(conf);
@@ -74,6 +76,7 @@ HAL_StatusTypeDef ads1115_write_cfg(const ads1115_i2c_conf_t* i2c_conf, const ad
 
 HAL_StatusTypeDef __ads1115_convert_raw_voltage(const ads1115_config_t * conf,
 		const int16_t raw_value, int32_t* converted_value)
+
 {
     double buf = ((double)raw_value / 32.768);
     HAL_StatusTypeDef err = HAL_OK;
@@ -149,6 +152,7 @@ HAL_StatusTypeDef __ads1115_write_to_microvolts(const ads1115_i2c_conf_t* i2c_co
 
 	int16_t gain;
 	uint16_t discrete_steps = 32768;
+
     switch (conf->gain) {
 		case ADS1115_6_144V: gain = 6144; break;
 		case ADS1115_4_096V: gain =  4096; break;
