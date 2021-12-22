@@ -3636,8 +3636,7 @@ LOAD /opt/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-
 .rodata         0x0000000008004578       0x68
                 0x0000000008004578                . = ALIGN (0x4)
  *(.rodata)
- .rodata        0x0000000008004578        0xa ./Core/Src/main.o
- *fill*         0x0000000008004582        0x2 
+ .rodata        0x0000000008004578        0xc ./Core/Src/main.o
  .rodata        0x0000000008004584       0x10 ./Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.o
  *(.rodata*)
  .rodata.AHBPrescTable

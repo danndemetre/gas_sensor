@@ -27,7 +27,7 @@ int main(void)
   while (1){
 	  lm60_get_temp(&lm60, &temp_c);
       temp_c *= 1000;
-      sprintf((char*)buf, "%d.%u C\r\n",  ((int)temp_c / 1000),
+      sprintf((char*)buf, "%d.%03u C\r\n",  ((int)temp_c / 1000),
             (abs(( int)temp_c) % 1000));
       HAL_UART_Transmit(&huart1, buf, strlen((char*)buf), HAL_MAX_DELAY);
 	 HAL_Delay(150);
