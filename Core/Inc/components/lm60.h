@@ -29,6 +29,6 @@ typedef struct lm60_config lm60_cfg_t;
  * @param temp_c
  * @return The temperature from the lm60 connected to the ads1115
  */
-HAL_StatusTypeDef lm60_get_temp(lm60_cfg_t* lm60_cfg, float * temp_c);
+HAL_StatusTypeDef lm60_get_temp(const lm60_cfg_t* lm60_cfg, float * temp_c);
 
 #endif /* INC_COMPONENTS_LM60_H_ */
