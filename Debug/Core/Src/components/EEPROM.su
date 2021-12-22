@@ -3,6 +3,6 @@ EEPROM.c:23:19:EEPROM_Write	72	static
 EEPROM.c:67:6:float2Bytes	24	static
 EEPROM.c:81:7:Bytes2float	32	static
 EEPROM.c:96:19:EEPROM_Write_NUM	40	static
-EEPROM.c:104:19:EEPROM_Read_NUM	40	static
-EEPROM.c:115:19:EEPROM_Read	72	static
-EEPROM.c:139:19:EEPROM_PageErase	72	dynamic
+EEPROM.c:105:19:EEPROM_Read_NUM	40	static
+EEPROM.c:117:19:EEPROM_Read	72	static
+EEPROM.c:143:19:EEPROM_PageErase	72	dynamic

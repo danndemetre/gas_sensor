@@ -14,14 +14,14 @@
 uint8_t bytes_temp[4];
 
 // function to determine the remaining bytes
-uint16_t bytestowrite (i2c_eeprom_cfg_t* ee_conf, uint16_t size, uint16_t offset)
+uint16_t bytestowrite (const i2c_eeprom_cfg_t* ee_conf, uint16_t size, const uint16_t offset)
 {
 	if ((size+offset)<ee_conf->page_size) return size;
 	else return ee_conf->page_size-offset;
 }
 
-HAL_StatusTypeDef EEPROM_Write (i2c_eeprom_cfg_t* ee_conf, uint16_t page,
-		uint16_t offset, uint8_t *data, uint16_t size)
+HAL_StatusTypeDef EEPROM_Write (const i2c_eeprom_cfg_t* ee_conf, const uint16_t page,
+		uint16_t offset,  uint8_t *data, uint16_t size)
 {
 	HAL_StatusTypeDef err = HAL_OK;
 	// Find out the number of bit, where the page addressing starts
@@ -93,7 +93,8 @@ float Bytes2float(uint8_t * ftoa_bytes_temp)
    return float_variable;
 }
 
-HAL_StatusTypeDef EEPROM_Write_NUM (i2c_eeprom_cfg_t* ee_conf, uint16_t page, uint16_t offset, float data)
+HAL_StatusTypeDef EEPROM_Write_NUM (const i2c_eeprom_cfg_t* ee_conf,
+		const uint16_t page, const uint16_t offset, float data)
 {
 	HAL_StatusTypeDef err = HAL_OK;
 	float2Bytes(bytes_temp, data);
@@ -101,7 +102,8 @@ HAL_StatusTypeDef EEPROM_Write_NUM (i2c_eeprom_cfg_t* ee_conf, uint16_t page, ui
 	return err;
 }
 
-HAL_StatusTypeDef EEPROM_Read_NUM (i2c_eeprom_cfg_t* ee_conf, uint16_t page, uint16_t offset, float * num)
+HAL_StatusTypeDef EEPROM_Read_NUM (const i2c_eeprom_cfg_t* ee_conf,
+		const uint16_t page, const uint16_t offset, float * num)
 {
 	HAL_StatusTypeDef err = HAL_OK;
 	uint8_t buffer[4];
@@ -112,7 +114,8 @@ HAL_StatusTypeDef EEPROM_Read_NUM (i2c_eeprom_cfg_t* ee_conf, uint16_t page, uin
 	return err;
 }
 
-HAL_StatusTypeDef EEPROM_Read (i2c_eeprom_cfg_t* ee_conf, uint16_t page, uint16_t offset, uint8_t *data, uint16_t size)
+HAL_StatusTypeDef EEPROM_Read (const i2c_eeprom_cfg_t* ee_conf, const uint16_t page,  uint16_t offset,
+		uint8_t *data,  uint16_t size)
 {
 	HAL_StatusTypeDef err = HAL_OK;
 	int paddrposition = log(ee_conf->page_size)/log(2);
@@ -126,7 +129,8 @@ HAL_StatusTypeDef EEPROM_Read (i2c_eeprom_cfg_t* ee_conf, uint16_t page, uint16_
 	{
 		uint16_t MemAddress = startPage<<paddrposition | offset;
 		uint16_t bytesremaining = bytestowrite(ee_conf, size, offset);
-		err = HAL_I2C_Mem_Read(ee_conf->hi2c, ee_conf->i2c_slave_addr, MemAddress, 2, &data[pos], bytesremaining, ee_conf->timeout);
+		err = HAL_I2C_Mem_Read(ee_conf->hi2c, ee_conf->i2c_slave_addr, MemAddress,
+				2, &data[pos], bytesremaining, ee_conf->timeout);
 		startPage += 1;
 		offset=0;
 		size = size-bytesremaining;
@@ -136,7 +140,7 @@ HAL_StatusTypeDef EEPROM_Read (i2c_eeprom_cfg_t* ee_conf, uint16_t page, uint16_
 	return err;
 }
 
-HAL_StatusTypeDef EEPROM_PageErase (i2c_eeprom_cfg_t* ee_conf, uint16_t page)
+HAL_StatusTypeDef EEPROM_PageErase (const i2c_eeprom_cfg_t* ee_conf, const uint16_t page)
 {
 	HAL_StatusTypeDef err = HAL_OK;
 	// calculate the memory address based on the page number
@@ -151,7 +155,8 @@ HAL_StatusTypeDef EEPROM_PageErase (i2c_eeprom_cfg_t* ee_conf, uint16_t page)
 	if(ee_conf->write_protect){
 		HAL_GPIO_WritePin (ee_conf->write_protect_port, ee_conf->write_protect_pin, GPIO_PIN_RESET);
 	}
-	err = HAL_I2C_Mem_Write(ee_conf->hi2c, ee_conf->i2c_slave_addr, MemAddress, 2, data, ee_conf->page_size, ee_conf->timeout);
+	err = HAL_I2C_Mem_Write(ee_conf->hi2c, ee_conf->i2c_slave_addr,
+			MemAddress, 2, data, ee_conf->page_size, ee_conf->timeout);
 
 	HAL_Delay (5);  // write cycle delay 
 

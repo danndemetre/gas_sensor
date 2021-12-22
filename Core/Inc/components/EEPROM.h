@@ -37,8 +37,8 @@ typedef struct i2c_eeprom_cfg i2c_eeprom_cfg_t;
  * @size is the size of the data
  * @return an error if something went wrong
  */
-HAL_StatusTypeDef EEPROM_Write (i2c_eeprom_cfg_t* ee_conf, uint16_t page,
-		uint16_t offset, uint8_t *data, uint16_t size);
+HAL_StatusTypeDef EEPROM_Write (const i2c_eeprom_cfg_t* ee_conf, const uint16_t page,
+		 uint16_t offset,  uint8_t *data,  uint16_t size);
 
 /** READ the data from the EEPROM
  * @page is the number of the start page. Range from 0 to ee_conf->pages-1
@@ -47,15 +47,15 @@ HAL_StatusTypeDef EEPROM_Write (i2c_eeprom_cfg_t* ee_conf, uint16_t page,
  * @size is the size of the data
  *  @return an error if something went wrong
  */
-HAL_StatusTypeDef EEPROM_Read (i2c_eeprom_cfg_t* ee_conf, uint16_t page,
-		uint16_t offset, uint8_t *data, uint16_t size);
+HAL_StatusTypeDef EEPROM_Read (const i2c_eeprom_cfg_t* ee_conf, const uint16_t page,
+		 uint16_t offset, uint8_t *data,  uint16_t size);
 
 /** Erase a page in the EEPROM Memory
  * @page is the number of page to erase
  * In order to erase multiple pages, just use this function in the for loop
  * @return an error if something went wrong
  */
-HAL_StatusTypeDef EEPROM_PageErase (i2c_eeprom_cfg_t* ee_conf, uint16_t page);
+HAL_StatusTypeDef EEPROM_PageErase (const i2c_eeprom_cfg_t* ee_conf, const uint16_t page);
 
 /**Write the Float/Integer values to the EEPROM
  * @page is the number of the start page. Range from 0 to ee_conf->pages-1
@@ -63,8 +63,8 @@ HAL_StatusTypeDef EEPROM_PageErase (i2c_eeprom_cfg_t* ee_conf, uint16_t page);
  * @data is the float/integer value that you want to write
  *  @return an error if something went wrong
  */
-HAL_StatusTypeDef EEPROM_Write_NUM (i2c_eeprom_cfg_t* ee_conf,
-		uint16_t page, uint16_t offset, float  fdata);
+HAL_StatusTypeDef EEPROM_Write_NUM (const i2c_eeprom_cfg_t* ee_conf,
+		const uint16_t page, const uint16_t offset, float  fdata);
 
 /** Reads the single Float/Integer values from the EEPROM
  * @page is the number of the start page. Range from 0 to ee_conf->pages-1
@@ -72,7 +72,7 @@ HAL_StatusTypeDef EEPROM_Write_NUM (i2c_eeprom_cfg_t* ee_conf,
  * @num is the float/integer value
  *   @return an error if something went wrong
  */
-HAL_StatusTypeDef EEPROM_Read_NUM (i2c_eeprom_cfg_t* ee_conf,
-		uint16_t page, uint16_t offset, float * num);
+HAL_StatusTypeDef EEPROM_Read_NUM (const i2c_eeprom_cfg_t* ee_conf,
+		const uint16_t page, const uint16_t offset, float * num);
 
 #endif /* INC_EEPROM_H_ */

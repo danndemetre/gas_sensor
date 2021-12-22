@@ -184,8 +184,8 @@ Discarded input sections
  .text.EEPROM_Read
                 0x0000000000000000      0x110 ./Core/Src/components/EEPROM.o
  .text.EEPROM_PageErase
-                0x0000000000000000      0x118 ./Core/Src/components/EEPROM.o
- .debug_info    0x0000000000000000     0x156b ./Core/Src/components/EEPROM.o
+                0x0000000000000000      0x120 ./Core/Src/components/EEPROM.o
+ .debug_info    0x0000000000000000     0x1575 ./Core/Src/components/EEPROM.o
  .debug_abbrev  0x0000000000000000      0x2b6 ./Core/Src/components/EEPROM.o
  .debug_aranges
                 0x0000000000000000       0x58 ./Core/Src/components/EEPROM.o
@@ -246,7 +246,7 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0x16 ./Core/Src/components/EEPROM.o
  .debug_macro   0x0000000000000000       0x35 ./Core/Src/components/EEPROM.o
  .debug_macro   0x0000000000000000       0x20 ./Core/Src/components/EEPROM.o
- .debug_line    0x0000000000000000      0xa03 ./Core/Src/components/EEPROM.o
+ .debug_line    0x0000000000000000      0xa14 ./Core/Src/components/EEPROM.o
  .debug_str     0x0000000000000000    0x8432b ./Core/Src/components/EEPROM.o
  .comment       0x0000000000000000       0x54 ./Core/Src/components/EEPROM.o
  .debug_frame   0x0000000000000000      0x14c ./Core/Src/components/EEPROM.o
@@ -325,7 +325,7 @@ Discarded input sections
  .text.ads1115_read_high_thresh
                 0x0000000000000000       0x28 ./Core/Src/components/ads1115.o
  .text.__ads1115_write_to_microvolts
-                0x0000000000000000       0xe8 ./Core/Src/components/ads1115.o
+                0x0000000000000000       0xf0 ./Core/Src/components/ads1115.o
  .text.ads1115_write_low_thresh
                 0x0000000000000000       0x28 ./Core/Src/components/ads1115.o
  .text.ads1115_write_high_thresh

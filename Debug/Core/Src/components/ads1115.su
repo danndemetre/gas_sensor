@@ -8,5 +8,5 @@ ads1115.c:127:19:ads1115_read_adc_microvolts	24	static
 ads1115.c:133:19:ads1115_read_low_thresh	24	static
 ads1115.c:138:19:ads1115_read_high_thresh	24	static
 ads1115.c:143:19:__ads1115_write_to_microvolts	48	static
-ads1115.c:171:19:ads1115_write_low_thresh	24	static
-ads1115.c:176:19:ads1115_write_high_thresh	24	static
+ads1115.c:170:19:ads1115_write_low_thresh	24	static
+ads1115.c:175:19:ads1115_write_high_thresh	24	static
