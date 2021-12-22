@@ -183,14 +183,14 @@ typedef  struct ads1115_config ads1115_config_t;
  * @param conf
  * @return
  */
-ads1115_raw_conf_t ads1115_encode_cfg(ads1115_config_t * conf);
+ads1115_raw_conf_t ads1115_encode_cfg(const ads1115_config_t * conf);
 
 /**
  * @brief decodes the raw config into a parsed version.
  * @param raw_conf
  * @return
  */
-ads1115_config_t   ads1115_decode_cfg(ads1115_raw_conf_t  raw_conf);
+ads1115_config_t   ads1115_decode_cfg(const ads1115_raw_conf_t  raw_conf);
 
 /**
  * @brief Read the raw value off of one of the ADC pins
@@ -200,7 +200,8 @@ ads1115_config_t   ads1115_decode_cfg(ads1115_raw_conf_t  raw_conf);
  *
  * @return An error if something goes wrong
  */
-HAL_StatusTypeDef ads1115_read_cfg(ads1115_i2c_conf_t* i2c_conf, ads1115_config_t  * conf);
+HAL_StatusTypeDef ads1115_read_cfg(const ads1115_i2c_conf_t* i2c_conf,
+		ads1115_config_t  * conf);
 
 /**
  * @brief Reconfigure ADC
@@ -210,8 +211,8 @@ HAL_StatusTypeDef ads1115_read_cfg(ads1115_i2c_conf_t* i2c_conf, ads1115_config_
  *
  * @return A valid i2c_conf on success, error code on failure
  */
-HAL_StatusTypeDef ads1115_write_cfg(ads1115_i2c_conf_t* i2c_conf,
-		ads1115_config_t * conf);
+HAL_StatusTypeDef ads1115_write_cfg(const ads1115_i2c_conf_t* i2c_conf,
+		const ads1115_config_t * conf);
 
 /**
  * @brief Reads the raw value off of one of the ADC pins and assigns a converted
@@ -219,71 +220,71 @@ HAL_StatusTypeDef ads1115_write_cfg(ads1115_i2c_conf_t* i2c_conf,
  *
  * @param i2c_conf An open ADC i2c_conf
  * @param conf The read configuration (pin, gain, data rate, etc)
- * @param mv The buffer to read the value into.
+ * @param uv
  * @return An error if something goes wrong
  */
-HAL_StatusTypeDef ads1115_read_adc_millivolts(ads1115_i2c_conf_t* i2c_conf,
-		ads1115_config_t * conf, int16_t* mv);
+HAL_StatusTypeDef ads1115_read_adc_millivolts(const ads1115_i2c_conf_t* i2c_conf,
+		const ads1115_config_t * conf, int32_t* uv);
 
 /**
- * @brief Reports the low comparator threshold settings in mv
+ * @brief Reports the low comparator threshold settings in uv
  * @param i2c_conf
- * @param mv_value
+ * @param uv_value
  * @return An error if something goes wrong
  */
-HAL_StatusTypeDef ads1115_read_low_thresh(ads1115_i2c_conf_t* i2c_conf,
-		ads1115_config_t *  conf, int16_t* mv_value);
+HAL_StatusTypeDef ads1115_read_low_thresh(const ads1115_i2c_conf_t* i2c_conf,
+		const ads1115_config_t *  conf, int32_t* uv_value);
 
 /**
- * @brief Reports the high comparator threshold settings in mv
+ * @brief Reports the high comparator threshold settings in uv
  * @param i2c_conf
  * @param conf
- * @param mv_value
+ * @param uv_value
  * @return An error if something goes wrong
  */
-HAL_StatusTypeDef ads1115_read_high_thresh(ads1115_i2c_conf_t* i2c_conf,
-		ads1115_config_t *  conf, int16_t* mv_value);
+HAL_StatusTypeDef ads1115_read_high_thresh(const ads1115_i2c_conf_t* i2c_conf,
+		const ads1115_config_t *  conf, int32_t* uv_value);
+
+/**
+ * @brief obtains the adc channel reading in microvolts
+ * @param i2c_conf
+ * @param conf
+ * @param uv
+ * @return An error if something goes wrong
+ */
+HAL_StatusTypeDef ads1115_read_adc_microvolts(const ads1115_i2c_conf_t* i2c_conf,
+		const ads1115_config_t *  conf, int32_t* uv);
 
 /**
  * @brief Reads a voltage measurement from the corresponding dev_register, do not call function directly
  * @param i2c_conf
  * @param conf
- * @param value
+ * @param uv_value
  * @param dev_register
  * @return An error if something goes wrong
  */
-HAL_StatusTypeDef ads1115_read_to_millivolts(ads1115_i2c_conf_t* i2c_conf,
-		ads1115_config_t *  conf, int16_t* mv_value, uint8_t * dev_register);
+HAL_StatusTypeDef ads1115_read_to_microvolts(const ads1115_i2c_conf_t* i2c_conf,
+		const ads1115_config_t *  conf, int32_t* uv_value, uint8_t * dev_register);
 
 /**
- * @brief Writes to the low comparator threshold settings in mv
+ * @brief Writes to the low comparator threshold settings in uv
  * @param i2c_conf
  * @param conf
- * @param mv_value
+ * @param uv_value
  * @return An error if something goes wrong
  */
-HAL_StatusTypeDef ads1115_write_low_thresh(ads1115_i2c_conf_t* i2c_conf,
-		ads1115_config_t *  conf, int16_t* mv_value);
+HAL_StatusTypeDef ads1115_write_low_thresh(const ads1115_i2c_conf_t* i2c_conf,
+		const ads1115_config_t *  conf, int32_t* uv_value);
 
 /**
- * @brief Writes to the high comparator threshold settings in mv
+ * @brief Writes to the high comparator threshold settings in uv
  *
  * @param i2c_conf
  * @param conf
- * @param mv_value
+ * @param uv_value
  * @return An error if something goes wrong
  */
-HAL_StatusTypeDef ads1115_write_high_thresh(ads1115_i2c_conf_t* i2c_conf,
-		ads1115_config_t *  conf, int16_t* mv_value);
+HAL_StatusTypeDef ads1115_write_high_thresh(const ads1115_i2c_conf_t* i2c_conf,
+		const ads1115_config_t *  conf, int32_t* uv_value);
 
-/**
- * @brief Writes a mv_threshold to one of the threshold registers, recommended not to use function directly
- * @param i2c_conf
- * @param conf
- * @param mv_value
- * @param dev_register
- * @return An error if something goes wrong
- */
-HAL_StatusTypeDef ads1115_write_to_millivolts(ads1115_i2c_conf_t* i2c_conf,
-		ads1115_config_t *  conf, int16_t* mv_value, uint8_t * dev_register);
 #endif

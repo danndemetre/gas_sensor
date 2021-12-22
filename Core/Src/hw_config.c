@@ -8,8 +8,8 @@
 #include "stm32f1xx_hal.h"
 #include "stdbool.h"
 
-lm60_cfg_t hw_conf_lm60(){
-	return (lm60_cfg_t){
+const lm60_cfg_t hw_conf_lm60(){
+	return (const lm60_cfg_t){
 		.ads_i2c_conf = (ads1115_i2c_conf_t){
 			.hi2c =&hi2c1,
 			.i2c_slave_addr =ADS1115BUS_ADDRESS_GND,
@@ -29,8 +29,8 @@ lm60_cfg_t hw_conf_lm60(){
 	};
 }
 
-i2c_eeprom_cfg_t hw_conf_m24c64_w(){
-	return (i2c_eeprom_cfg_t){
+const i2c_eeprom_cfg_t hw_conf_m24c64_w(){
+	return (const i2c_eeprom_cfg_t){
 		.hi2c = &hi2c1,
 		.i2c_slave_addr = 0xA0,
 		.timeout = 100, //ms

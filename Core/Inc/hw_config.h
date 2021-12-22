@@ -44,12 +44,12 @@ UART_HandleTypeDef huart1;
  *
  * @return the hardware configuration for the lm60
  */
-lm60_cfg_t hw_conf_lm60();
+const lm60_cfg_t hw_conf_lm60();
 
 /**
  * @return the hardware configuration for the EEPROM
  */
-i2c_eeprom_cfg_t hw_conf_m24c64_w();
+const i2c_eeprom_cfg_t hw_conf_m24c64_w();
 
 /**
   * @brief  This function is executed in case of error occurrence.

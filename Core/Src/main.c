@@ -9,6 +9,7 @@
   */
 int main(void)
 {
+  uint8_t buf[20];
   HAL_Init();
 
   SystemClock_Config();
@@ -24,8 +25,10 @@ int main(void)
 
   while (1){
 	  lm60_get_temp(&lm60, &temp_c);
+      temp_c *= 100;
+      sprintf((char*)buf, "%u.%u C\r\n",  ((unsigned int)temp_c / 100),
+            ((unsigned int)temp_c % 100));
+      HAL_UART_Transmit(&huart1, buf, strlen((char*)buf), HAL_MAX_DELAY);
 	 HAL_Delay(1000);
   }
 }
-
-

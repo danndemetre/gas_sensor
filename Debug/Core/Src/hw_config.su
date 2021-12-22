@@ -1,5 +1,5 @@
-hw_config.c:11:12:hw_conf_lm60	64	static
-hw_config.c:32:18:hw_conf_m24c64_w	56	static
+hw_config.c:11:18:hw_conf_lm60	72	static
+hw_config.c:32:24:hw_conf_m24c64_w	24	static
 hw_config.c:45:6:MX_USART1_UART_Init	8	static
 hw_config.c:61:6:MX_CAN_Init	8	static
 hw_config.c:81:6:MX_I2C1_Init	8	static
