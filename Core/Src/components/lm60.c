@@ -8,7 +8,7 @@
 #include "components/ads1115.h"
 
 
-HAL_StatusTypeDef lm60_init_temp_conv(const lm60_cfg_t* lm60_conf){
+HAL_StatusTypeDef lm60_start_temp_reading(const lm60_cfg_t* lm60_conf){
 	return ads1115_start_reading(&lm60_conf->ads_i2c_conf,
 			&lm60_conf->ads_reg_conf);
 }

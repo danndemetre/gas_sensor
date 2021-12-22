@@ -21,15 +21,14 @@ int main(void)
   MX_CAN_Init();
   MX_I2C1_Init();
 
-  HAL_Delay(50); //allow the ADS to come up
   float temp_c = 0;
   lm60_cfg_t lm60 = hw_conf_lm60();
 
   while (1){
 	  lm60_get_temp(&lm60, &temp_c);
-      temp_c *= 100;
-      sprintf((char*)buf, "%d.%u C\r\n",  ((int)temp_c / 100),
-            (abs(( int)temp_c) % 100));
+      temp_c *= 1000;
+      sprintf((char*)buf, "%d.%u C\r\n",  ((int)temp_c / 1000),
+            (abs(( int)temp_c) % 1000));
       HAL_UART_Transmit(&huart1, buf, strlen((char*)buf), HAL_MAX_DELAY);
 	 HAL_Delay(1000);
   }

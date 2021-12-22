@@ -38,7 +38,8 @@ struct ads1115_i2c_conf {
     uint32_t timeout; /**< The maximum amount of milliseconds to wait for
                                an I2C i2c_conf */
     bool single_shot_block; /*whether to block everything and wait for reading to be processed
-     	 	 	 	 	 	 	 	 	 	 when in single shot mode*/
+     	 	 	 	 	 	 	 	 	 	 when in single shot mode ~15ms. If you set to false you need to go start the reading, then come back
+     	 	 	 	 	 	 	 	 	 	 later to read it. */
 };
 
 /**

@@ -1,2 +1,2 @@
-lm60.c:11:19:lm60_init_temp_conv	16	static
+lm60.c:11:19:lm60_start_temp_reading	16	static
 lm60.c:16:19:lm60_get_temp	24	static
