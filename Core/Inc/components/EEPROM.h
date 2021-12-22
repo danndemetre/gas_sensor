@@ -10,9 +10,10 @@
 #ifndef INC_EEPROM_H_
 #define INC_EEPROM_H_
 
-#include "stdint.h"
 #include "stm32f1xx_hal.h"
+#include <stdint.h>
 #include <stdbool.h>
+
 /**
  * @brief this is the hardware configuration for the eeprom
  */

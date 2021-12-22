@@ -6,7 +6,6 @@
  */
 #include "components/lm60.h"
 #include "components/ads1115.h"
-#include "stdlib.h"
 
 HAL_StatusTypeDef lm60_get_temp(const lm60_cfg_t* lm60_conf, float * temp_c){
 	int32_t uv;

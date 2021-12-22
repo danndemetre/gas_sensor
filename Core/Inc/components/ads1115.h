@@ -6,12 +6,22 @@
  * @brief Driver for the ADS1115 I2C chip.
  *
  */
-#include "stdint.h"
 #include "stm32f1xx_hal.h"
+#include <stdint.h>
 
 #define ADS1115BUS_ADDRESS_GND  0x48
 #define ADS1115_BUS_ADDRESS_VDD 0x49
 #define ADS1115_BUS_ADDRESS_SCL  0x4B
+
+/**
+ * @brief the registers available on the ADS1115
+ */
+enum ads1115_reg {
+	ADS1115_CONVERSION_REG = 0x00, /* The ADS1115 Register where measured values are stored */
+	ADS1115_CONFIGURATION_REG = 0x01,/* The ADS1115 Register where commands are written to configure readings */
+	 ADS1115_LOW_THRES_REG = 0x02, 	/* Low water mark to signal an alert */
+	 ADS1115_HIGH_THRES_REG = 0x03, 	/* High water mark to signal an alert */
+};
 
 /**
  * @brief A raw read configuration
@@ -21,7 +31,7 @@ typedef uint16_t ads1115_raw_conf_t;
 /**
  * @brief The ADS1115  parameters
  */
-struct ads1115_i2c_params {
+struct ads1115_i2c_conf {
 	I2C_HandleTypeDef * hi2c; /**< The I2C bus number on which the ADS lies */
     uint8_t i2c_slave_addr; /**< The slave address configured in hardware */
     uint32_t timeout; /**< The maximum amount of milliseconds to wait for
@@ -31,7 +41,7 @@ struct ads1115_i2c_params {
 /**
  * @brief A handle to an ADC i2c_conf
  */
-typedef struct ads1115_i2c_params ads1115_i2c_conf_t;
+typedef struct ads1115_i2c_conf ads1115_i2c_conf_t;
 
 /**
  * @brief The various bit offsets for the different parameters

@@ -1,5 +1,5 @@
 Core/Src/components/ads1115.o: ../Core/Src/components/ads1115.c \
- ../Core/Inc/components/ads1115.h \
+ ../Core/Inc/hw_config.h ../Core/Inc/components/ads1115.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h \
  ../Core/Inc/stm32f1xx_hal_conf.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h \
@@ -25,8 +25,10 @@ Core/Src/components/ads1115.o: ../Core/Src/components/ads1115.c \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_i2c.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h \
- ../Core/Inc/hw_config.h ../Core/Inc/components/ads1115.h \
- ../Core/Inc/components/lm60.h ../Core/Inc/components/EEPROM.h
+ ../Core/Inc/components/lm60.h ../Core/Inc/components/ads1115.h \
+ ../Core/Inc/components/EEPROM.h
+
+../Core/Inc/hw_config.h:
 
 ../Core/Inc/components/ads1115.h:
 
@@ -80,10 +82,8 @@ Core/Src/components/ads1115.o: ../Core/Src/components/ads1115.c \
 
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:
 
-../Core/Inc/hw_config.h:
+../Core/Inc/components/lm60.h:
 
 ../Core/Inc/components/ads1115.h:
-
-../Core/Inc/components/lm60.h:
 
 ../Core/Inc/components/EEPROM.h:

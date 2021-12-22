@@ -10,8 +10,6 @@
 
 #include "components/ads1115.h"
 
-typedef struct hw_conf_lm60 hw_conf_lm60_t;
-
 /**
  * @brief lm60 i2c_conf consisting of ads i2c_conf and config
  */
