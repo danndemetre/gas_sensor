@@ -88,26 +88,24 @@ HAL_StatusTypeDef __ads1115_convert_raw_voltage(const ads1115_config_t * conf,
 }
 
 HAL_StatusTypeDef ads1115_start_reading(const ads1115_i2c_conf_t* i2c_conf,
-		const ads1115_config_t * conf){
+		ads1115_config_t  conf){
 
 	HAL_StatusTypeDef err = HAL_OK;
-	ads1115_config_t cnf_cpy = *conf;
-	cnf_cpy.os = ADS1115_IDLE_OR_START;
-	err = ads1115_write_cfg(i2c_conf, &cnf_cpy);
-	cnf_cpy.os = ADS1115_OS;
+	conf.os = ADS1115_IDLE_OR_START;
+	err = ads1115_write_cfg(i2c_conf, &conf);
+	conf.os = ADS1115_OS;
 
 	return err;
 }
 
 HAL_StatusTypeDef __ads1115_wait_for_reading(const ads1115_i2c_conf_t* i2c_conf,
-		const ads1115_config_t * conf){
+		ads1115_config_t conf){
     HAL_StatusTypeDef err = HAL_OK;
-    ads1115_config_t cnf_cpy = *conf;
 	uint32_t st_time = HAL_GetTick();
 	bool timeout = false;
-	err = ads1115_read_cfg(i2c_conf,  &cnf_cpy);
-	while( (err == HAL_OK) && !timeout && (cnf_cpy.os == ADS1115_OS) ){
-		 err = ads1115_read_cfg(i2c_conf,  &cnf_cpy);
+	err = ads1115_read_cfg(i2c_conf,  &conf);
+	while( (err == HAL_OK) && !timeout && (conf.os == ADS1115_OS) ){
+		 err = ads1115_read_cfg(i2c_conf, &conf);
 		 HAL_Delay(5);
 		 timeout = ((HAL_GetTick() - st_time) > 125) ? true : false;
 	}
@@ -125,9 +123,9 @@ HAL_StatusTypeDef __ads1115_read_to_microvolts(const ads1115_i2c_conf_t* i2c_con
 	HAL_StatusTypeDef err = HAL_OK;
 
 	if( (conf->mode == ADS1115_SINGLE_SHOT) && i2c_conf->single_shot_block ){
-		err = ads1115_start_reading(i2c_conf, conf);
+		err = ads1115_start_reading(i2c_conf, *conf);
 		if( err == HAL_OK ){
-			err = __ads1115_wait_for_reading(i2c_conf, conf);
+			err = __ads1115_wait_for_reading(i2c_conf, *conf);
 		}
 	}
 

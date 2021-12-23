@@ -10,7 +10,7 @@
 
 HAL_StatusTypeDef lm60_start_temp_reading(const lm60_cfg_t* lm60_conf){
 	return ads1115_start_reading(&lm60_conf->ads_i2c_conf,
-			&lm60_conf->ads_reg_conf);
+			lm60_conf->ads_reg_conf);
 }
 
 HAL_StatusTypeDef lm60_get_temp(const lm60_cfg_t* lm60_conf, float * temp_c){

@@ -200,7 +200,7 @@ typedef  struct ads1115_config ads1115_config_t;
  * @return An error if something went wrong
  */
 HAL_StatusTypeDef ads1115_start_reading(const ads1115_i2c_conf_t* i2c_conf,
-		const ads1115_config_t * conf);
+		ads1115_config_t conf);
 
 /**
  * @brief encodes the configuration to a raw result for the ADC config reg.
